@@ -14,8 +14,10 @@ public class GameManager : MonoBehaviour
 
     public enum InputMode
     {
+        none,
         play,
-        animation
+        animation,
+        selectarget
     }
 
     public InputMode gameInputMode;

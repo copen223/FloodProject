@@ -33,6 +33,10 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     public Vector2 scale_big;
     public Vector2 offset;
 
+    private bool isWatting = false;
+    private float waitTime = 0;
+    private float timer = 0;
+
     #region 状态机
     public enum State
     {
@@ -47,6 +51,23 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
 
     private void Update()
     {
+        if (GameManager.instance.gameInputMode == GameManager.InputMode.animation)
+            return;
+
+        if(timer > waitTime)
+        {
+            isWatting = false;
+        }
+        else
+        {
+            timer += Time.deltaTime;
+        }
+
+        if(isWatting)
+        {
+            return;
+        }
+
         switch (state)
         {
             case State.none:None();break;
@@ -63,8 +84,10 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         UIManager.instance.ActiveUI("TargetSelect", false);
         UIManager.instance.HideUI("Hand", false);
 
+        Debug.Log("none  " + gameObject.name);
+
         transform.localScale = scale_ori;
-        transform.position = (Vector2) transform.position - offset;
+        transform.localPosition = new Vector3(transform.localPosition.x, 0, 0);
 
         
     }
@@ -74,8 +97,10 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     }
     private void OnSelected()
     {
+        Debug.Log("selected  " + gameObject.name);
         transform.localScale = scale_big;
-        transform.position = (Vector2) transform.position + offset;
+        transform.localPosition = new Vector3(transform.localPosition.x, offset.y, 0);
+
     }
     private void Selected()
     {
@@ -105,6 +130,8 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         UIManager.instance.TranslateUIPos("TargetSelect",  HolderPos);
         UIManager.instance.HideUI("Hand", true);
 
+        GameManager.instance.gameInputMode = GameManager.InputMode.selectarget;
+
         state = State.casted;
 
     }
@@ -112,32 +139,52 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     {
         UIManager.instance.TranslateUIPos("TargetSelect", HolderPos);
 
+        Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        // 检测距离
+        bool CanSelect = true;
+
+        float dis_x = Mathf.Abs(mouse_pos.x - holder.WorldPos.x);
+        float dis_y = Mathf.Abs(mouse_pos.y - holder.WorldPos.y);
+
+        if (dis_x > card.cast_extent_x || dis_y > card.cast_extent_y)
+        {
+            CanSelect = false;
+        }
+
+        RaycastHit2D hit = Physics2D.Raycast(mouse_pos, Vector2.zero);
+        if (hit.collider != null)
+        {
+            ActorMono targetMono = hit.collider.gameObject.GetComponent<ActorMono>();
+
+            if (targetMono != null)
+            {
+                targetMono.OnMouseSelect(CanSelect);
+            }
+        }
+
+
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
+            GameManager.instance.gameInputMode = GameManager.InputMode.play;
             state = State.none;
             OnNone();
         }
 
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if (CanSelect)
         {
-            // 确定选中网格
-            Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int mouse_cell = PathFinderManager.instance.grid.WorldToCell(mouse_pos);
-            Vector3 mouse_cell_pos = PathFinderManager.instance.grid.GetCellCenterWorld(mouse_cell);
-            // 检测距离
-            float dis_x = Mathf.Abs(mouse_cell_pos.x - holder.WorldPos.x);
-            float dis_y = Mathf.Abs(mouse_cell_pos.y - holder.WorldPos.y);
-
-            if(dis_x > card.cast_extent_x || dis_y > card.cast_extent_y)
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                return;
-            }
-
-            // 进行cast
-            RaycastHit2D hit = Physics2D.Raycast(mouse_cell_pos, Vector2.zero);
-            if(hit.collider!=null)
-            {
-                DoCasted(hit.collider.gameObject.GetComponent<ActorMono>());
+                // 进行cast
+                if (hit.collider != null)
+                {
+                    ActorMono targetMono = hit.collider.gameObject.GetComponent<ActorMono>();
+                    if (targetMono != null)
+                    {
+                        DoCasted(hit.collider.gameObject.GetComponent<ActorMono>());
+                        GameManager.instance.gameInputMode = GameManager.InputMode.play;
+                    }
+                }
             }
         }
     }
@@ -155,7 +202,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
 
         ActiveActionUI(false);
         transform.localScale = scale_ori;
-        transform.position = (Vector2)transform.position - offset;
+        transform.localPosition = new Vector3(transform.localPosition.x,offset.y, 0);
     }
     private void Focused()
     {
@@ -297,6 +344,9 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     {
         if (GameManager.instance.gameInputMode == GameManager.InputMode.animation)
             return;
+        if (isWatting)
+            return;
+
 
         // 点击->clicked
         if (state == State.selected && eventData.button == PointerEventData.InputButton.Left)
@@ -324,8 +374,10 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (isWatting)
+            return;
         // 放大卡牌
-        if(state == State.none)
+        if (state == State.none)
         {
             state = State.selected;
             OnSelected();
@@ -334,11 +386,20 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (isWatting)
+            return;
         // 还原卡牌状态
-        if(state == State.clicked || state == State.selected)
+        if (state == State.clicked || state == State.selected)
         {
             state = State.none;
             OnNone();
         }
     }
+
+    public void WaitForSeconds(float time)
+    {
+        isWatting = true;
+        waitTime = time;
+    }
+
 }

@@ -161,6 +161,17 @@ public class UIManager : MonoBehaviour
         {
             CardUI_hand_list[i].gameObject.SetActive(true);
             CardUI_hand_list[i].SetCard(cards_list[i]);
+            //CardUI_hand_list[i].WaitForSeconds(1f);
+        }
+
+        for (int i = 0; i < cards_list.Count; i++)
+        {
+            if (CardUI_hand_list[i].state != CardMono.State.focused)
+            {
+                CardUI_hand_list[i].state = CardMono.State.none;
+                CardUI_hand_list[i].OnNone();
+            }
+            //CardUI_hand_list[i].WaitForSeconds(1f);
         }
 
         //for (int i= 0; i < cards_list.Count;i++)

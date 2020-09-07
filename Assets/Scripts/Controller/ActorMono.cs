@@ -389,17 +389,40 @@ public class ActorMono : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if(GameManager.instance.gameInputMode == GameManager.InputMode.animation)
+        switch (GameManager.instance.gameInputMode)
         {
-            UIManager.instance.UpdateActorDirSignUI(gameObject, false);
-            return;
+            case GameManager.InputMode.animation:
+                UIManager.instance.UpdateActorDirSignUI(gameObject, false);
+                break;
+            case GameManager.InputMode.selectarget:
+                break;
+            case GameManager.InputMode.play:
+                UIManager.instance.UpdateActorDirSignUI(gameObject, true);
+                GetComponent<SpriteRenderer>().color = Color.blue;
+                break;
+            default:
+                break;
         }
-
-        UIManager.instance.UpdateActorDirSignUI(gameObject, true);
     }
 
     private void OnMouseExit()
     {
         UIManager.instance.UpdateActorDirSignUI(gameObject, false);
+        GetComponent<SpriteRenderer>().color = Color.white;
+    }
+
+    public void OnMouseSelect(bool isSelected)
+    {
+        if(GameManager.instance.gameInputMode == GameManager.InputMode.selectarget)
+        {
+            if(isSelected)
+            {
+                GetComponent<SpriteRenderer>().color = Color.blue;
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().color = Color.white;
+            }
+        }
     }
 }

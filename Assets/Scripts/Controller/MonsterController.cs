@@ -71,9 +71,9 @@ public class MonsterController : MonoBehaviour
     public void TurnStart()
     {
         // 决定行动次数
-        action_count = Random.Range(action_count_min + 1, action_count_max + 1);
+        action_count = Random.Range(action_count_min, action_count_max);
         UpdateCastCardsList();
-        StartCoroutine("TurnGoOn");
+        StartCoroutine(TurnGoOn());
     }
 
     IEnumerator TurnGoOn()
@@ -102,7 +102,6 @@ public class MonsterController : MonoBehaviour
                 var path_list = PathFinderManager.instance.SearchPathTo(actor.WorldPos, target.GetComponent<ActorMono>().WorldPos);
                 path_list.RemoveAt(path_list.Count - 1);
 
-                actor.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
                 actor.StartMoveByList(path_list);
 
                 while(actor.IsMoving)
@@ -110,6 +109,7 @@ public class MonsterController : MonoBehaviour
                     yield return new WaitForEndOfFrame();
                 }
             }
+            // 距离不够 结束回合
             dirWithDis = target.GetComponent<ActorMono>().WorldPos - actor.WorldPos;
             if (Mathf.Abs(dirWithDis.x) > card.cast_extent_x || Mathf.Abs(dirWithDis.y) > card.cast_extent_y)
             {
@@ -120,23 +120,25 @@ public class MonsterController : MonoBehaviour
 
             Timer timer = new Timer();
 
-            CombatManager.instance.StartCombat(actor, card, target.GetComponent<ActorMono>());
-            actor.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+            // 动画
+            Animator animator = GetComponent<Animator>();
+            float toRight = target.transform.position.x > transform.position.x ? 1 : -1;
+            animator.SetInteger("ToAttack", 1);
+            animator.SetFloat("Blend", toRight);
+            AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
+            float aniTime = info.length;
+            float aniTimer = 0f;
 
-            while (true)
+            while (aniTimer < aniTime)
             {
-                //释放卡牌时间为1.5f
-                if(timer.IsOver(1.5f))
-                {
-                    timer.ReStart();
-                    break;
-                }
-
-                timer.TimerTick(Time.deltaTime);           
+                aniTimer += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
-            actor.gameObject.GetComponent<SpriteRenderer>().color = Color.gray;
-            yield return new WaitForSeconds(1f);
+            animator.SetInteger("ToAttack", -1);
+
+            CombatManager.instance.StartCombat(actor, card, target.GetComponent<ActorMono>());
+
+            yield return new WaitForSeconds(0.5f);
         }
 
         BattleManager.instance.OnTurnEnd();

@@ -55,6 +55,7 @@ public class BattleManager : MonoBehaviour
     public void OnBattleStart()
     {
         BattleState = State.BattleStart;
+        GameManager.instance.gameInputMode = GameManager.InputMode.play;
 
         UIManager.instance.ActiveUI("BattleMode",true);
         UIManager.instance.ActiveUI("BattleStartButton",false);
@@ -151,15 +152,12 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        // 处于UI交互状态
-        if (UIManager.instance.IsAtUIArea || UIManager.instance.IsHandUsing)
+        // 处于UI交互状态 或 动画状态
+        if (UIManager.instance.IsAtUIArea || UIManager.instance.IsHandUsing || GameManager.instance.gameInputMode == GameManager.InputMode.animation)
         {
             UIManager.instance.InActivePath();
             return;
         }
-
-        if (GameManager.instance.gameInputMode == GameManager.InputMode.animation)
-            return;
 
         // 不处于UI交互状态
 

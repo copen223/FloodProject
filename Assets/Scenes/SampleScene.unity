@@ -1303,6 +1303,7 @@ GameObject:
   - component: {fileID: 346124015}
   - component: {fileID: 346124017}
   - component: {fileID: 346124018}
+  - component: {fileID: 346124019}
   m_Layer: 0
   m_Name: Monster
   m_TagString: Untagged
@@ -1442,8 +1443,8 @@ MonoBehaviour:
   cardInfo_focus_atk_list: []
   cardInfo_focus_defend_list: []
   target: {fileID: 1695100030}
-  action_count_min: 0
-  action_count_max: 4
+  action_count_min: 1
+  action_count_max: 1
 --- !u!114 &346124018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1466,6 +1467,25 @@ MonoBehaviour:
   ray_up_start_offset: 0
   ray_down_start_offset: 0
   ray_advance_offset: 0
+--- !u!95 &346124019
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346124012}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 223d4f2296d2db0429f89426aa6ef715, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &362699238
 GameObject:
   m_ObjectHideFlags: 0

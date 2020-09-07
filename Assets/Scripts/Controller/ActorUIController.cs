@@ -13,6 +13,8 @@ public class ActorUIController : MonoBehaviour
     public GameObject dirSign;
     public GameObject dirSign_up;
     public GameObject dirSign_down;
+    public Text dirSign_up_text;
+    public Text dirSign_down_text;
 
     public GameObject healPoint_text;
     public GameObject healPoint;
@@ -42,7 +44,9 @@ public class ActorUIController : MonoBehaviour
     private void ChangeDirSign(CardSign up,CardSign down)
     {
         ChangeDirSignColor(up, dirSign_up);
+        ChangeDirSignText(up, dirSign_up_text);
         ChangeDirSignColor(down, dirSign_down);
+        ChangeDirSignText(down, dirSign_down_text);
     }
 
     private void ChangeDirSignColor(CardSign sign,GameObject signUI)
@@ -58,6 +62,18 @@ public class ActorUIController : MonoBehaviour
         else if (sign.type == CardSign.Type.none)
         {
             signUI.GetComponent<Image>().color = Color.white;
+        }
+    }
+
+    private void ChangeDirSignText(CardSign sign,Text text)
+    {
+        if(sign.intensity <= 0)
+        {
+            text.text = "";
+        }
+        else
+        {
+            text.text = sign.intensity + "";
         }
     }
 
