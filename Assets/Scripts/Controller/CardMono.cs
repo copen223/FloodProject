@@ -137,7 +137,6 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
             RaycastHit2D hit = Physics2D.Raycast(mouse_cell_pos, Vector2.zero);
             if(hit.collider!=null)
             {
-                holder.ActionPoint -= 1;
                 DoCasted(hit.collider.gameObject.GetComponent<ActorMono>());
             }
         }
@@ -287,20 +286,20 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     /// <param name="target"></param>
     private void DoCasted(ActorMono target)
     {
-        CombatManager.instance.StartCombat(holder, card, target);
-
+        holder.GetComponent<ActorMono>().StartCoroutine(holder.GetComponent<ActorMono>().CastCard(card, target));
         state = State.none;
         OnNone();
-
-        holder.DiscardCard(CardModel);
     }
 
 
     // 事件
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (GameManager.instance.gameInputMode == GameManager.InputMode.animation)
+            return;
+
         // 点击->clicked
-        if(state == State.selected && eventData.button == PointerEventData.InputButton.Left)
+        if (state == State.selected && eventData.button == PointerEventData.InputButton.Left)
         {
             state = State.clicked;
             OnClicked();

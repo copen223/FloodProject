@@ -131,6 +131,7 @@ public class ActorMono : MonoBehaviour
         { }
     }
 
+
     public void OnBattle()
     {
         UIManager.instance.UpdateActorHpUI(gameObject, true);
@@ -281,6 +282,34 @@ public class ActorMono : MonoBehaviour
         DiscardCard(card);
     }
 
+    public IEnumerator CastCard(Card card, ActorMono target)
+    {
+        ActionPoint -= 1;
+
+        Animator animator = GetComponent<Animator>();
+        float toRight = target.transform.position.x > transform.position.x ? 1 : -1;
+        animator.SetInteger("ToAttack", 1);
+        animator.SetFloat("Blend", toRight);
+        AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
+        float aniTime = info.length;
+        float aniTimer = 0f;
+
+        GameManager.instance.gameInputMode = GameManager.InputMode.animation; 
+
+        while(aniTimer<aniTime)
+        {
+            aniTimer += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+        CombatManager.instance.StartCombat(this, card, target);
+        DiscardCard(card);
+
+        animator.SetInteger("ToAttack", -1);
+
+        GameManager.instance.gameInputMode = GameManager.InputMode.play;
+    }
+
     public void FocusCard(Card card)
     {
         if (focusPoint >= focusPoint_max)
@@ -360,6 +389,12 @@ public class ActorMono : MonoBehaviour
 
     private void OnMouseEnter()
     {
+        if(GameManager.instance.gameInputMode == GameManager.InputMode.animation)
+        {
+            UIManager.instance.UpdateActorDirSignUI(gameObject, false);
+            return;
+        }
+
         UIManager.instance.UpdateActorDirSignUI(gameObject, true);
     }
 

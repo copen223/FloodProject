@@ -158,6 +158,9 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
+        if (GameManager.instance.gameInputMode == GameManager.InputMode.animation)
+            return;
+
         // 不处于UI交互状态
 
         // 路径搜索与显示

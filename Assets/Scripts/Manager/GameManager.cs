@@ -12,6 +12,14 @@ public class GameManager : MonoBehaviour
 
     public State gameState;
 
+    public enum InputMode
+    {
+        play,
+        animation
+    }
+
+    public InputMode gameInputMode;
+
     public static GameManager instance;
 
     private void Awake()
