@@ -52,6 +52,7 @@ public class MouseController : MonoBehaviour
         lastCell = curCell;
         curCell = CellPos;
 
+
     }
 
     public void SetState(MouseState _state)

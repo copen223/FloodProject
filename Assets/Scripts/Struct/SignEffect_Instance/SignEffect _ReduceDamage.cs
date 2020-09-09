@@ -12,17 +12,25 @@ namespace Assets.Scripts.Struct
         {
             if (isAtker)
             {
+                // 攻击方发动减伤效果 受到的伤害减少自己的防御力的数值
                 combat.beDamaged_atk -= combat.actor_atk.dfd;
+                if (combat.beDamaged_atk <= 0)
+                    combat.beDamaged_atk = 0;
             }
             else
             {
-                combat.beDamaged_dfd -= combat.actor_atk.dfd;
+                // 防御方发动减伤效果
+                combat.beDamaged_dfd -= combat.actor_dfd.dfd;
+                if (combat.beDamaged_dfd <= 0)
+                    combat.beDamaged_dfd = 0;
+
             }
         }
 
         public SignEffect_ReduceDamage()
         {
             name = "减伤";
+            priority = 6;
         }
     }
 }

@@ -25,6 +25,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     public Text foucsCount;
     public Image signIcon_up;
     public Image signIcon_down;
+    public Text cardName_text;
 
     public Color focus_frame_color;
     public Color focus_one_frame_color;
@@ -84,7 +85,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         UIManager.instance.ActiveUI("TargetSelect", false);
         UIManager.instance.HideUI("Hand", false);
 
-        Debug.Log("none  " + gameObject.name);
+        //Debug.Log("none  " + gameObject.name);
 
         transform.localScale = scale_ori;
         transform.localPosition = new Vector3(transform.localPosition.x, 0, 0);
@@ -97,7 +98,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     }
     private void OnSelected()
     {
-        Debug.Log("selected  " + gameObject.name);
+        //Debug.Log("selected  " + gameObject.name);
         transform.localScale = scale_big;
         transform.localPosition = new Vector3(transform.localPosition.x, offset.y, 0);
 
@@ -257,36 +258,13 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     {
         //Debug.Log(gameObject.name + " " + card.isFocused);
 
+        cardName_text.text = card.cardName;
+
         signInten_up.text = "" + card.sign_up.intensity;
         signInten_down.text = "" + card.sign_down.intensity;
 
-        switch(card.sign_up.type)
-        {
-            case CardSign.Type.atk:
-                signIcon_up.sprite = CardManager.instance.atk_sign_sprite;
-                break;
-            case CardSign.Type.dfd:
-                signIcon_up.sprite = CardManager.instance.dfd_sign_sprite;
-                break;
-            case CardSign.Type.none:
-                signIcon_up.sprite = CardManager.instance.none_sign_sprite;
-                signInten_up.text = "";
-                break;
-        }
-
-        switch (card.sign_down.type)
-        {
-            case CardSign.Type.atk:
-                signIcon_down.sprite = CardManager.instance.atk_sign_sprite;
-                break;
-            case CardSign.Type.dfd:
-                signIcon_down.sprite = CardManager.instance.dfd_sign_sprite;
-                break;
-            case CardSign.Type.none:
-                signIcon_down.sprite = CardManager.instance.none_sign_sprite;
-                signInten_down.text = "";
-                break;
-        }
+        UpdateSignView(card.sign_up.subType,true);
+        UpdateSignView(card.sign_down.subType, false);
 
         if(card.focusCount != 0)
         {
@@ -317,7 +295,44 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         }
 
     }
+    private void UpdateSignView(CardSign.SubType sub,bool isAtUp)
+    {
+        Image image = null;
 
+        if (isAtUp)
+        {
+            image = signIcon_up;
+        }
+        else
+            image = signIcon_down;
+
+        switch (sub)
+        {
+            case CardSign.SubType.atk_blunt:
+                image.sprite = CardManager.instance.atk_blunt_sign_sprite;
+                break;
+            case CardSign.SubType.atk_chop:
+                image.sprite = CardManager.instance.atk_chop_sign_sprite;
+                break;
+            case CardSign.SubType.atk_stab:
+                image.sprite = CardManager.instance.atk_stab_sign_sprite;
+                break;
+            case CardSign.SubType.dfd_block:
+                image.sprite = CardManager.instance.dfd_block_sign_sprite;
+                break;
+            case CardSign.SubType.dfd_dodge:
+                image.sprite = CardManager.instance.dfd_dodge_sign_sprite;
+                break;
+            case CardSign.SubType.dfd_parry:
+                image.sprite = CardManager.instance.dfd_parry_sign_sprite;
+                break;
+            case CardSign.SubType.none:
+                image.sprite = CardManager.instance.none_sign_sprite;
+                break;
+
+
+        }
+    }
     // 其他操作
     /// <summary>
     /// 设定卡片

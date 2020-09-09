@@ -72,6 +72,39 @@ public class PathFinderManager : MonoBehaviour
         return worldPath;
     }
 
+    public List<Vector3> SearchPathLinkTo(Vector3 start,Vector3 end)
+    {
+        Vector3Int _start = grid.WorldToCell(start);
+        Vector3Int _end = grid.WorldToCell(end);
+
+        endPos = (Vector2Int)_end;
+        startPos = (Vector2Int)_start;
+
+        AStar aStar = new AStar((Vector2Int)_start, (Vector2Int)_end, nodeMap);
+
+        List<Vector2Int> path = aStar.SearchLinkest();
+
+        if (path == null)
+        {
+            Debug.LogError("paht is null");
+            return null;
+        }
+
+
+
+        List<Vector3> worldPath = new List<Vector3>();
+
+        foreach (var node in path)
+        {
+            Vector2 worldPos = grid.GetCellCenterWorld(new Vector3Int(node.x, node.y, 0));
+            worldPath.Add(worldPos);
+            //GameObject.Instantiate(prefab, worldPos, Quaternion.identity);
+        }
+
+        return worldPath;
+
+    }
+
     public void CreatSign(Vector2Int pos)
     {
         Vector2 worldPos = grid.GetCellCenterWorld(new Vector3Int(pos.x, pos.y, 0));
@@ -115,6 +148,9 @@ public class AStar
 
     public List<Vector2Int> Search()
     {
+        open_list = new List<Node>();
+        close_list = new List<Node>();
+
         // 最小费用点
         Node node_minCost = map.GetNodeByGridPos(start.x, start.y); 
 
@@ -149,32 +185,68 @@ public class AStar
             // 结束搜索
             if (now.x == end.x && now.y == end.y)
             {
-                // 如果目标不可站立，则目标转为最近的可站立位置
-                while(!now.CanWalk)
-                {
-                    now = now.parent;
-                }
-
-                List<Vector2Int> path_list = new List<Vector2Int>();
-
+                List<Node> pathNode_list = new List<Node>();
                 int count = 0;
-
-                while(now != start && count < 100)
+                while (now != start && count < 100)
                 {
                     count += 1;
-                    path_list.Add(new Vector2Int(now.x, now.y));
+                    pathNode_list.Add(now);
                     now = now.parent;
                 }
-                path_list.Add(new Vector2Int(now.x, now.y));
+                pathNode_list.Add(now);
+                // 得到末尾到起始node列表
+            
 
-                // 如果path消耗大于移动点数 则取最近的点
-                while((path_list.Count - 1) * BattleManager.instance.moveCost_varCell > BattleManager.instance.actor_curTurn.movePoint)
+                while(!pathNode_list[0].CanWalk || 
+                    (pathNode_list.Count - 1) * BattleManager.instance.moveCost_varCell > BattleManager.instance.actor_curTurn.movePoint)
                 {
-                    path_list.RemoveAt(0);
+                    pathNode_list.RemoveAt(0);
+                    if (pathNode_list.Count <= 0)
+                        break;
+                }
+                pathNode_list.Reverse();
+                // 得到终点为可站立点的路径
+
+                List<Vector2Int> path_list = new List<Vector2Int>();
+                for(int i =0;i<pathNode_list.Count;i++)
+                {
+                    path_list.Add(new Vector2Int(pathNode_list[i].x, pathNode_list[i].y));
                 }
 
-                path_list.Reverse();
-                return path_list; 
+                return path_list;
+
+
+
+
+
+
+                //// 如果目标不可站立，则目标转为最近的可站立位置
+                //while (!now.CanWalk)
+                //{
+                //    now = now.parent;
+                //}
+
+                //List<Vector2Int> path_list = new List<Vector2Int>();
+                
+
+
+
+                //while(now != start && count < 100)
+                //{
+                //    count += 1;
+                //    path_list.Add(new Vector2Int(now.x, now.y));
+                //    now = now.parent;
+                //}
+                //path_list.Add(new Vector2Int(now.x, now.y));
+
+                //// 如果path消耗大于移动点数 则取最近的点
+                //while((path_list.Count - 1) * BattleManager.instance.moveCost_varCell > BattleManager.instance.actor_curTurn.movePoint)
+                //{
+                //    path_list.RemoveAt(0);
+                //}
+
+                //path_list.Reverse();
+                //return path_list; 
 
             }
             // 搜索相邻位置
@@ -206,33 +278,114 @@ public class AStar
         // 如果没有找到路径，则以最小费用点作为路径终点
         now = node_minCost;
 
-        while (!now.CanWalk)
+        List<Node> minPathNode_list = new List<Node>();
+        int minCount = 0;
+        while (now != start && minCount < 100)
         {
+            minCount += 1;
+            minPathNode_list.Add(now);
             now = now.parent;
         }
+        minPathNode_list.Add(now);
+        // 得到末尾到起始前一格的node列表
+
+        while (!minPathNode_list[0].CanWalk ||
+            (minPathNode_list.Count - 1) * BattleManager.instance.moveCost_varCell > BattleManager.instance.actor_curTurn.movePoint)
+        {
+            minPathNode_list.RemoveAt(0);
+            if (minPathNode_list.Count <= 0)
+                break;
+        }
+        minPathNode_list.Reverse();
+        // 得到终点为可站立点的路径
 
         List<Vector2Int> minPath_list = new List<Vector2Int>();
-
-        int num = 0;
-
-        while (now != start && num < 100)
+        for (int i = 0; i < minPathNode_list.Count; i++)
         {
-            num += 1;
-            minPath_list.Add(new Vector2Int(now.x, now.y));
-            now = now.parent;
-        }
-        minPath_list.Add(new Vector2Int(now.x, now.y));
-
-        while ((minPath_list.Count - 1) * BattleManager.instance.moveCost_varCell > BattleManager.instance.actor_curTurn.movePoint)
-        {
-            minPath_list.RemoveAt(0);
+            minPath_list.Add(new Vector2Int(minPathNode_list[i].x, minPathNode_list[i].y));
         }
 
-        minPath_list.Reverse();
-
-        if (minPath_list.Count <= 0)
-            return null;
         return minPath_list;
+
+
+
+
+        //while (!now.CanWalk)
+        //{
+        //    now = now.parent;
+        //}
+
+        //List<Vector2Int> minPath_list = new List<Vector2Int>();
+
+        //int num = 0;
+
+        //while (now != start && num < 100)
+        //{
+        //    num += 1;
+        //    minPath_list.Add(new Vector2Int(now.x, now.y));
+        //    now = now.parent;
+        //}
+        //minPath_list.Add(new Vector2Int(now.x, now.y));
+
+        //while ((minPath_list.Count - 1) * BattleManager.instance.moveCost_varCell > BattleManager.instance.actor_curTurn.movePoint)
+        //{
+        //    minPath_list.RemoveAt(0);
+        //}
+
+        //minPath_list.Reverse();
+
+        //if (minPath_list.Count <= 0)
+        //    return null;
+        //return minPath_list;
+    }
+
+    /// <summary>
+    /// 搜索前往临近点的路径
+    /// </summary>
+    /// <returns></returns>
+    public List<Vector2Int> SearchLinkest()
+    {
+        Node end1 = map.GetNodeByGridPos(end.x - 1, end.y);
+        Node end2 = map.GetNodeByGridPos(end.x + 1, end.y);
+        //Node end3 = map.GetNodeByGridPos(end.x, end.y + 1);
+        //Node end4 = map.GetNodeByGridPos(end.x, end.y - 1);
+
+        Node trueEnd = end;
+
+        end = end1;
+        List<Vector2Int> list1 = Search();
+        end = end2;
+        List<Vector2Int> list2 = Search();
+        //end = end3;
+        //List<Vector2Int> list3 = Search();
+        //end = end4;
+        //List<Vector2Int> list4 = Search();
+
+        List<int> count_list = new List<int>{ list1.Count, list2.Count/*, list3.Count, list4.Count*/ };
+
+        int count = 999;
+        int index = 0;
+        for(int i=0;i<count_list.Count;i++)
+        {
+            if(count_list[i]<count && count_list[i]>1)
+            {
+                count = count_list[i];
+                index = i;
+            }
+        }
+
+        if (count == 999)
+            return null;
+        if (index == 0)
+            return list1;
+        if (index == 1)
+            return list2;
+        //if (index == 2)
+        //    return list3;
+        //if (index == 3)
+        //    return list4;
+
+        return null;
     }
 }
 
@@ -271,13 +424,18 @@ public class NodeMap
     {
         Vector2 rayPos = grid.GetCellCenterWorld(new Vector3Int(node.x, node.y, 0));
         RaycastHit2D hit = Physics2D.Raycast(rayPos, Vector2.zero);
-
+        //Debug.Log(hit.collider);
         if (hit.collider == null)
         {
             node.type = Node.Type.none;
         }
         else
         {
+            if(hit.collider.tag == "Actor")
+            {
+                node.type = Node.Type.occupy;
+            }
+
             if (hit.collider.tag == "Obstacle")
             {
                 node.type = Node.Type.obstacle;
@@ -309,7 +467,8 @@ public class Node
     {
         none,
         obstacle,
-        ladder
+        ladder,
+        occupy
     }
 
     public Type type;
@@ -329,7 +488,10 @@ public class Node
         }
         get
         {
-            // 障碍物不可行走
+            // 被占据不可停留
+            if (type == Type.occupy)
+                return false;
+            // 障碍物不可停留
             if (type == Type.obstacle)
                 return false;
 
@@ -377,6 +539,9 @@ public class Node
             //{
             //    return true;
             //}
+
+            if (map.GetNodeByGridPos(x, y).type == Type.occupy)
+                return true;
 
             return false;
         }

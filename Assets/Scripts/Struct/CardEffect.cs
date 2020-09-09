@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Struct
 {
-    public class CardEffect
+    public abstract class CardEffect:Effect
     {
+        public string trigger;
     }
 }

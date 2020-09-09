@@ -73,7 +73,7 @@ public class ActorUIController : MonoBehaviour
         }
         else
         {
-            text.text = sign.intensity + "";
+            text.text = CardSign.SignTypeName(sign.subType) + sign.intensity;
         }
     }
 

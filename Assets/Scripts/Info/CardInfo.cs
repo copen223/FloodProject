@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "卡片", menuName = "序列化对象")]
+[CreateAssetMenu(fileName = "卡片", menuName = "序列化卡片")]
 public class CardInfo : ScriptableObject
 {
     public string sign_up;
@@ -12,6 +12,7 @@ public class CardInfo : ScriptableObject
     public int cast_extent_x;
     public int cast_extent_y;
     public int memory_cost;
+    public float damage_multiply;
 
     // 描述
     public string cardName;

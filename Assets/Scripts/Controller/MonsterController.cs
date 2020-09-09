@@ -99,8 +99,8 @@ public class MonsterController : MonoBehaviour
             if(Mathf.Abs(dirWithDis.x) > card.cast_extent_x || Mathf.Abs(dirWithDis.y) > card.cast_extent_y)
             {
                 // 确定路径
-                var path_list = PathFinderManager.instance.SearchPathTo(actor.WorldPos, target.GetComponent<ActorMono>().WorldPos);
-                path_list.RemoveAt(path_list.Count - 1);
+                var path_list = PathFinderManager.instance.SearchPathLinkTo(actor.WorldPos, target.GetComponent<ActorMono>().WorldPos);
+                //path_list.RemoveAt(path_list.Count - 1);
 
                 actor.StartMoveByList(path_list);
 
@@ -111,7 +111,7 @@ public class MonsterController : MonoBehaviour
             }
             // 距离不够 结束回合
             dirWithDis = target.GetComponent<ActorMono>().WorldPos - actor.WorldPos;
-            if (Mathf.Abs(dirWithDis.x) > card.cast_extent_x || Mathf.Abs(dirWithDis.y) > card.cast_extent_y)
+            if (Mathf.RoundToInt(Mathf.Abs(dirWithDis.x)) > card.cast_extent_x || Mathf.RoundToInt(Mathf.Abs(dirWithDis.y)) > card.cast_extent_y)
             {
                 break;
             }

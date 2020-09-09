@@ -53,6 +53,7 @@ public class ActorMono : MonoBehaviour
 
     public float atk;   // 攻击力
     public float dfd;   // 防御力
+    public float amor_dfd; //护甲防御力
     public float mbt;   // 移动力
     public int advantage;   // 先攻
 
@@ -140,7 +141,7 @@ public class ActorMono : MonoBehaviour
     // 操作
     public void Behit(float damage)
     {
-        healPoint -= (damage - dfd);
+        healPoint -= (damage);
         UIManager.instance.UpdateActorHpUI(gameObject, true);
     }
 
@@ -244,7 +245,7 @@ public class ActorMono : MonoBehaviour
             UIManager.instance.UpdateUIText("DeckNum", "卡组:" + deckPile.Count);
         }
 
-        Debug.Log("draw！");
+        //Debug.Log("draw！");
     }
 
     /// <summary>

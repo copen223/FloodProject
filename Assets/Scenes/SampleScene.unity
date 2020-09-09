@@ -1306,7 +1306,7 @@ GameObject:
   - component: {fileID: 346124019}
   m_Layer: 0
   m_Name: Monster
-  m_TagString: Untagged
+  m_TagString: Actor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1407,8 +1407,9 @@ MonoBehaviour:
   group: 1
   movePoint: 10
   healPoint: 10
-  atk: 1
+  atk: 2
   dfd: 0
+  amor_dfd: 0
   mbt: 1
   advantage: 1
   focusPoint_max: 0
@@ -1435,10 +1436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardInfo_cast_atk_list:
-  - {fileID: 11400000, guid: c5f7c9094b07bd349b07657137df2e82, type: 2}
-  - {fileID: 11400000, guid: 64d344eca3d3ff84fb191272af7bc668, type: 2}
-  - {fileID: 11400000, guid: c851dbc2000738348a5875baca199953, type: 2}
-  - {fileID: 11400000, guid: 13bf7d3770e845a47b981c33b1ce7e0f, type: 2}
+  - {fileID: 11400000, guid: a6da2857e2226014dbe004b26f16edff, type: 2}
   cardInfo_cast_defend_list: []
   cardInfo_focus_atk_list: []
   cardInfo_focus_defend_list: []
@@ -3024,13 +3022,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardInfos_list:
-  - {fileID: 11400000, guid: c5f7c9094b07bd349b07657137df2e82, type: 2}
-  - {fileID: 11400000, guid: 64d344eca3d3ff84fb191272af7bc668, type: 2}
-  - {fileID: 11400000, guid: c851dbc2000738348a5875baca199953, type: 2}
-  - {fileID: 11400000, guid: 13bf7d3770e845a47b981c33b1ce7e0f, type: 2}
-  atk_sign_sprite: {fileID: 21300000, guid: 55730359db3ac734db11632760eb092d, type: 3}
-  dfd_sign_sprite: {fileID: 21300000, guid: 8560297aa4ef2cb438998fd843710407, type: 3}
+  - {fileID: 11400000, guid: ff6ce4db4c738c146b13480881e3307d, type: 2}
+  - {fileID: 11400000, guid: a6da2857e2226014dbe004b26f16edff, type: 2}
+  - {fileID: 11400000, guid: 3408c21950fe9b942a20890f716288e0, type: 2}
+  - {fileID: 11400000, guid: 21a1b8dd06fa4eb418dc9b76beddf257, type: 2}
+  - {fileID: 11400000, guid: c992d261dc0427344a0fd85e0d75ff9f, type: 2}
   none_sign_sprite: {fileID: 21300000, guid: e007c03f25d89f94da19284cd483d86f, type: 3}
+  atk_chop_sign_sprite: {fileID: 21300000, guid: 55730359db3ac734db11632760eb092d, type: 3}
+  atk_stab_sign_sprite: {fileID: 21300000, guid: f7dc133e6072e5643a9e6f732e873953, type: 3}
+  atk_blunt_sign_sprite: {fileID: 21300000, guid: 6a1c2265a6eca564486d0b9b2171dbb5, type: 3}
+  dfd_dodge_sign_sprite: {fileID: 21300000, guid: 80d3235d1e6ddd54b9ea3be007a681ab, type: 3}
+  dfd_block_sign_sprite: {fileID: 21300000, guid: 8560297aa4ef2cb438998fd843710407, type: 3}
+  dfd_parry_sign_sprite: {fileID: 21300000, guid: f865f54cbfe4bdb48b8357e69ce78db4, type: 3}
 --- !u!1 &1300559326
 GameObject:
   m_ObjectHideFlags: 0
@@ -3634,7 +3637,7 @@ GameObject:
   - component: {fileID: 1695100037}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Actor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3776,8 +3779,9 @@ MonoBehaviour:
   group: 0
   movePoint: 10
   healPoint: 10
-  atk: 1
-  dfd: 0
+  atk: 5
+  dfd: 1
+  amor_dfd: 0
   mbt: 1
   advantage: 2
   focusPoint_max: 3
@@ -3787,7 +3791,7 @@ MonoBehaviour:
   movePoint_max: 20
   cardNum_hand_start: 5
   info: {fileID: 0}
-  deckInfo: {fileID: 11400000, guid: 0ce6f6e8ccd54b642be86d2e54611df3, type: 2}
+  deckInfo: {fileID: 11400000, guid: f2665a83316913d48982820bfb4cdb8e, type: 2}
   move_speed: 4
   worldPos_offset: {x: 0, y: -0.5, z: 0}
   stopMoveByList: 0

@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Struct
 {
-    public abstract class SignEffect
+    public abstract class SignEffect:Effect
     {
-        public int priority;
-
-        public string name;
-
-        public abstract void DoEffect(Combat combat);
-
-        public bool isAtker;
+        public string trigger;
     }
+
+
 }

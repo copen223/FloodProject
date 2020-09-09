@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Struct;
+using System.ComponentModel;
 
 public class CardManager : MonoBehaviour
 {
@@ -17,11 +18,18 @@ public class CardManager : MonoBehaviour
 
 
     // UI资源
-    public Sprite atk_sign_sprite;
-    public Sprite dfd_sign_sprite;
     public Sprite none_sign_sprite;
 
-    
+
+    public Sprite atk_chop_sign_sprite;
+    public Sprite atk_stab_sign_sprite;
+    public Sprite atk_blunt_sign_sprite;
+
+    public Sprite dfd_dodge_sign_sprite;
+    public Sprite dfd_block_sign_sprite;
+    public Sprite dfd_parry_sign_sprite;
+
+
     // 卡牌创建
 
     /// <summary>
@@ -33,11 +41,13 @@ public class CardManager : MonoBehaviour
     {
         Card card = new Card();
         card.cast_type = "范围指向";
-        card.effect = new CardEffect();
-        card.sign_up = GetCardSignByText(info.sign_up, true);
-        card.sign_down = GetCardSignByText(info.sign_down, false);
+        card.effects_list = new List<CardEffect>(); // 具体效果待定
+        card.sign_up = GetCardSignByText(card, info.sign_up, true);
+        card.sign_down = GetCardSignByText(card, info.sign_down, false);
         card.cast_extent_x = info.cast_extent_x;
         card.cast_extent_y = info.cast_extent_y;
+        card.cardName = info.cardName;
+        card.damage_multiply = info.damage_multiply;
 
         return card;
     }
@@ -50,15 +60,15 @@ public class CardManager : MonoBehaviour
     {
         Card card = new Card();
         card.cast_type = "无";
-        card.effect = new CardEffect();
-        card.sign_up = GetCardSignByText("空白", true);
-        card.sign_down = GetCardSignByText("空白", false);
+        card.effects_list = new List<CardEffect>();
+        card.sign_up = GetCardSignByText(card, "空白", true);
+        card.sign_down = GetCardSignByText(card, "空白", false);
         card.memory_cost = -1;
 
         return card;
     }
 
-    private CardSign GetCardSignByText(string txt,bool isAtUp)
+    private CardSign GetCardSignByText(Card card, string txt,bool isAtUp)
     {
         char[] words = txt.ToCharArray();
 
@@ -137,7 +147,10 @@ public class CardManager : MonoBehaviour
 
         sign.pos = isAtUp ? CardSign.Pos.up : CardSign.Pos.down;
 
-        sign.effect = GetSignEffect(sign.type);
+        // 添加标记效果
+        sign.effect = GetSignEffect(sign.subType);
+        sign.effect.card = card;
+        
 
         return sign;
     }
@@ -155,6 +168,30 @@ public class CardManager : MonoBehaviour
             default:
                 return new SignEffect_None();
         }
+    }
+
+    private SignEffect GetSignEffect(CardSign.SubType subType)
+    {
+        switch (subType)
+        {
+            case CardSign.SubType.atk_blunt:
+                return new SignEffect_Damage();
+            case CardSign.SubType.atk_chop:
+                return new SignEffect_Damage();
+            case CardSign.SubType.atk_stab:
+                return new SignEffect_Damage();
+            case CardSign.SubType.dfd_block:
+                return new SignEffect_ReduceDamage();
+            case CardSign.SubType.dfd_parry:
+                return new SignEffect_ReduceDamage();
+            case CardSign.SubType.dfd_dodge:
+                return new SignEffect_Dodge();
+            case CardSign.SubType.none:
+                return new SignEffect_None();
+            default:
+                return new SignEffect_None();
+        }
+
     }
 
     // 从数据库获取卡牌
@@ -193,7 +230,7 @@ public class CardManager : MonoBehaviour
 
             for (int j = 0; j < words.Length; j++)
             {
-                if (words[j] > 47 && words[j] < 58)
+                if ((int)words[j] > '0' && (int)words[j] < '9')
                 {
                     value.Add(words[j]);
                 }
