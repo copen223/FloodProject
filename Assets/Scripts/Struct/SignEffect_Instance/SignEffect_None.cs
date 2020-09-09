@@ -10,7 +10,6 @@ namespace Assets.Scripts.Struct
     {
         public override void DoEffect(Combat combat)
         {
-
         }
 
         public SignEffect_None()

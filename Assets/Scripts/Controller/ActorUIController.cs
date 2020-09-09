@@ -19,6 +19,9 @@ public class ActorUIController : MonoBehaviour
     public GameObject healPoint_text;
     public GameObject healPoint;
 
+    public GameObject action_text;
+    public GameObject healPointReduce_text;
+
     // Start is called before the first frame update
 
     // Update is called once per frame
@@ -38,6 +41,31 @@ public class ActorUIController : MonoBehaviour
             if(healPoint.activeInHierarchy)
                 healPoint.transform.position = Camera.main.WorldToScreenPoint(worldPos);
 
+            worldPos += grid.cellSize.y * new Vector3(0f, 2.3f, 0);
+
+            if (healPointReduce_text.activeInHierarchy)
+            {
+                Color color = healPointReduce_text.GetComponent<Text>().color;
+                healPointReduce_text.GetComponent<Text>().color = new Color(color.r, color.g, color.b, color.a -= Time.deltaTime);
+                healPointReduce_text.transform.position = Camera.main.WorldToScreenPoint(worldPos);
+
+                if(color.a<=0)
+                {
+                    healPointReduce_text.SetActive(false);
+                }
+            }
+
+            worldPos += grid.cellSize.y * new Vector3(0f, -0.4f, 0);
+            if (action_text.activeInHierarchy)
+            {
+                action_text.transform.position = Camera.main.WorldToScreenPoint(worldPos);
+                Color color = action_text.GetComponent<Text>().color;
+                action_text.GetComponent<Text>().color = new Color(color.r, color.g, color.b, color.a -= Time.deltaTime);
+                if (color.a <= 0)
+                {
+                    action_text.SetActive(false);
+                }
+            }
         }
     }
 
@@ -106,5 +134,21 @@ public class ActorUIController : MonoBehaviour
         
         healPoint_text.GetComponent<Text>().text = actor_mono.healPoint + "";
         
+    }
+
+    public void UpdateFloatText(string text,int pos)
+    {
+        if(pos == 0)
+        {
+            healPointReduce_text.GetComponent<Text>().text = text;
+            healPointReduce_text.GetComponent<Text>().color = new Color(1, 0, 0, 1);
+            healPointReduce_text.SetActive(true);
+        }
+        if(pos == 1)
+        {
+            action_text.GetComponent<Text>().text = text;
+            action_text.GetComponent<Text>().color = new Color(0, 0, 0, 1);
+            action_text.SetActive(true);
+        }
     }
 }

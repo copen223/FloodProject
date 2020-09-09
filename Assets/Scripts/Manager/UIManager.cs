@@ -386,4 +386,17 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
+    public void UpdateActorFloatUI(GameObject actor,string text, int pos)
+    {
+        for (int i = 0; i < actors_list.Count; i++)
+        {
+            GameObject actorUI = actors_list[i];
+            if (actorUI.GetComponent<ActorUIController>().actor == actor)   
+            {
+                actorUI.GetComponent<ActorUIController>().UpdateFloatText(text,pos);
+                return;
+            }
+        }
+    }
 }

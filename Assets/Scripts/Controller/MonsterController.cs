@@ -121,20 +121,20 @@ public class MonsterController : MonoBehaviour
             Timer timer = new Timer();
 
             // 动画
-            Animator animator = GetComponent<Animator>();
-            float toRight = target.transform.position.x > transform.position.x ? 1 : -1;
-            animator.SetInteger("ToAttack", 1);
-            animator.SetFloat("Blend", toRight);
-            AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
-            float aniTime = info.length;
-            float aniTimer = 0f;
+            //Animator animator = GetComponent<Animator>();
+            //float toRight = target.transform.position.x > transform.position.x ? 1 : -1;
+            //animator.SetInteger("ToAttack", 1);
+            //animator.SetFloat("Blend", toRight);
+            //AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
+            //float aniTime = info.length;
+            //float aniTimer = 0f;
 
-            while (aniTimer < aniTime)
-            {
-                aniTimer += Time.deltaTime;
-                yield return new WaitForEndOfFrame();
-            }
-            animator.SetInteger("ToAttack", -1);
+            //while (aniTimer < aniTime)
+            //{
+            //    aniTimer += Time.deltaTime;
+            //    yield return new WaitForEndOfFrame();
+            //}
+            //animator.SetInteger("ToAttack", -1);
 
             CombatManager.instance.StartCombat(actor, card, target.GetComponent<ActorMono>());
 

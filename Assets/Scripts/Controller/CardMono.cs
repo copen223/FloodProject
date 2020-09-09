@@ -348,7 +348,8 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     /// <param name="target"></param>
     private void DoCasted(ActorMono target)
     {
-        holder.GetComponent<ActorMono>().StartCoroutine(holder.GetComponent<ActorMono>().CastCard(card, target));
+        //holder.GetComponent<ActorMono>().StartCoroutine(holder.GetComponent<ActorMono>().CastCard(card, target));
+        holder.GetComponent<ActorMono>().CastCard(card, target);
         state = State.none;
         OnNone();
     }

@@ -29,7 +29,7 @@ namespace Assets.Scripts.Struct
 
         public SignEffect_Damage()
         {
-            name = "伤害";
+            name = "攻击";
             effectTags_list = new List<EffectTag> { EffectTag.接触};
             priority = 2;
         }

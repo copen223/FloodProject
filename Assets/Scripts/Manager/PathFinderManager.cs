@@ -23,6 +23,8 @@ public class PathFinderManager : MonoBehaviour
     
     public void SearchPathTo(Vector2Int start,Vector2Int end)
     {
+        nodeMap.UpdateNodeType();
+
         AStar aStar = new AStar(start, end, nodeMap/*,this*/);
 
         List<Vector2Int> path = aStar.Search();
@@ -42,6 +44,8 @@ public class PathFinderManager : MonoBehaviour
 
     public List<Vector3> SearchPathTo(Vector3 start,Vector3 end)
     {
+        nodeMap.UpdateNodeType();
+
         Vector3Int _start = grid.WorldToCell(start);
         Vector3Int _end = grid.WorldToCell(end);
 
@@ -74,6 +78,8 @@ public class PathFinderManager : MonoBehaviour
 
     public List<Vector3> SearchPathLinkTo(Vector3 start,Vector3 end)
     {
+        nodeMap.UpdateNodeType();
+
         Vector3Int _start = grid.WorldToCell(start);
         Vector3Int _end = grid.WorldToCell(end);
 
@@ -198,7 +204,7 @@ public class AStar
             
 
                 while(!pathNode_list[0].CanWalk || 
-                    (pathNode_list.Count - 1) * BattleManager.instance.moveCost_varCell > BattleManager.instance.actor_curTurn.movePoint)
+                    (pathNode_list.Count - 1) * BattleManager.instance.moveCost_varCell > BattleManager.instance.actor_curTurn.movePoint || pathNode_list[0].isOccupied)
                 {
                     pathNode_list.RemoveAt(0);
                     if (pathNode_list.Count <= 0)
@@ -290,7 +296,8 @@ public class AStar
         // 得到末尾到起始前一格的node列表
 
         while (!minPathNode_list[0].CanWalk ||
-            (minPathNode_list.Count - 1) * BattleManager.instance.moveCost_varCell > BattleManager.instance.actor_curTurn.movePoint)
+            (minPathNode_list.Count - 1) * BattleManager.instance.moveCost_varCell > BattleManager.instance.actor_curTurn.movePoint
+            || minPathNode_list[0].isOccupied)
         {
             minPathNode_list.RemoveAt(0);
             if (minPathNode_list.Count <= 0)
@@ -420,32 +427,48 @@ public class NodeMap
         return node;   
     }
 
+    public void UpdateNodeType()
+    {
+        foreach(var node in node_list)
+        {
+            SetNodeType(node);
+        }
+    }
+
     private void SetNodeType(Node node)
     {
         Vector2 rayPos = grid.GetCellCenterWorld(new Vector3Int(node.x, node.y, 0));
-        RaycastHit2D hit = Physics2D.Raycast(rayPos, Vector2.zero);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(rayPos, Vector2.zero);
         //Debug.Log(hit.collider);
-        if (hit.collider == null)
-        {
-            node.type = Node.Type.none;
-        }
-        else
-        {
-            if(hit.collider.tag == "Actor")
-            {
-                node.type = Node.Type.occupy;
-            }
 
-            if (hit.collider.tag == "Obstacle")
-            {
-                node.type = Node.Type.obstacle;
-            }
+        node.isOccupied = false;
 
-            if (hit.collider.tag == "Ladder")
+        foreach (var hit in hits)
+        {
+            if (hit.collider == null)
             {
-                node.type = Node.Type.ladder;
+                node.type = Node.Type.none;
+            }
+            else
+            {
+                if (hit.collider.tag == "Actor")
+                {
+                    node.isOccupied = true;
+                    //Debug.Log(node.x + " " + node.y);
+                }
+
+                if (hit.collider.tag == "Obstacle")
+                {
+                    node.type = Node.Type.obstacle;
+                }
+
+                if (hit.collider.tag == "Ladder")
+                {
+                    node.type = Node.Type.ladder;
+                }
             }
         }
+        
     }
 }
 
@@ -468,8 +491,9 @@ public class Node
         none,
         obstacle,
         ladder,
-        occupy
     }
+
+    public bool isOccupied = false;
 
     public Type type;
 
@@ -488,9 +512,6 @@ public class Node
         }
         get
         {
-            // 被占据不可停留
-            if (type == Type.occupy)
-                return false;
             // 障碍物不可停留
             if (type == Type.obstacle)
                 return false;
@@ -539,13 +560,25 @@ public class Node
             //{
             //    return true;
             //}
+            // 即使被占据 也能通过
+            //if (map.GetNodeByGridPos(x, y).isOccupied)
+            //    return true;
 
-            if (map.GetNodeByGridPos(x, y).type == Type.occupy)
+            return false;
+        }
+    }
+
+    public bool CanJump
+    {
+        get
+        {
+            if (map.GetNodeByGridPos(x, y - 1).CanWalk && (map.GetNodeByGridPos(x - 1, y).CanWalk || map.GetNodeByGridPos(x + 1, y).CanWalk))
                 return true;
 
             return false;
         }
     }
+
 
 
 }

@@ -142,6 +142,7 @@ public class ActorMono : MonoBehaviour
     public void Behit(float damage)
     {
         healPoint -= (damage);
+        UIManager.instance.UpdateActorFloatUI(gameObject, damage + "", 0);
         UIManager.instance.UpdateActorHpUI(gameObject, true);
     }
 
@@ -283,32 +284,14 @@ public class ActorMono : MonoBehaviour
         DiscardCard(card);
     }
 
-    public IEnumerator CastCard(Card card, ActorMono target)
+    public void CastCard(Card card, ActorMono target)
     {
         ActionPoint -= 1;
 
-        Animator animator = GetComponent<Animator>();
-        float toRight = target.transform.position.x > transform.position.x ? 1 : -1;
-        animator.SetInteger("ToAttack", 1);
-        animator.SetFloat("Blend", toRight);
-        AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
-        float aniTime = info.length;
-        float aniTimer = 0f;
-
-        GameManager.instance.gameInputMode = GameManager.InputMode.animation; 
-
-        while(aniTimer<aniTime)
-        {
-            aniTimer += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-
         CombatManager.instance.StartCombat(this, card, target);
+
         DiscardCard(card);
 
-        animator.SetInteger("ToAttack", -1);
-
-        GameManager.instance.gameInputMode = GameManager.InputMode.play;
     }
 
     public void FocusCard(Card card)
@@ -370,6 +353,69 @@ public class ActorMono : MonoBehaviour
         {
             UIManager.instance.UpdateHandUI(handPile.cards_list);
         }
+    }
+
+    // 演出
+    public void StartDoAction(string action,GameObject target)
+    {
+        StopAllCoroutines();
+        StartCoroutine(DoAction(action, target));
+    }
+
+
+    private IEnumerator DoAction(string action,GameObject target)
+    {
+        float timer = 0f;
+       
+        if(action == "受伤")
+        {
+            //UIManager.instance.UpdateActorFloatUI(gameObject, "被击中", 1);
+
+            while(timer<0.7f)
+            {
+                timer += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+        }
+        if (action == "攻击")
+        {
+            UIManager.instance.UpdateActorFloatUI(gameObject, "攻击", 1);
+
+            Animator animator = GetComponent<Animator>();
+            float toRight = target.transform.position.x > transform.position.x ? 1 : -1;
+            animator.SetInteger("ToAttack", 1);
+            animator.SetFloat("Blend", toRight);
+            AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
+            float aniTime = info.length;
+            float aniTimer = 0f;
+
+            while (aniTimer < aniTime)
+            {
+                aniTimer += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+
+            animator.SetInteger("ToAttack", -1);
+        }
+        if (action == "闪避")
+        {
+            UIManager.instance.UpdateActorFloatUI(gameObject, "闪避", 1);
+            while (timer < 0.7f)
+            {
+                timer += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+        }
+        if (action == "格挡")
+        {
+            UIManager.instance.UpdateActorFloatUI(gameObject, "格挡", 1);
+            while (timer < 0.7f)
+            {
+                timer += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
     }
 
     // 初始化
