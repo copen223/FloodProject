@@ -6,6 +6,8 @@ using Assets.Scripts.Struct;
 public class CombatManager : MonoBehaviour
 {
     public static CombatManager instance;
+    public bool isCombating = false;
+
 
     private void Awake()
     {
@@ -23,18 +25,20 @@ public class CombatManager : MonoBehaviour
 
     public IEnumerator ActionShow(Combat combat)
     {
+        isCombating = true;
+
         GameManager.instance.gameInputMode = GameManager.InputMode.animation;
 
         float timer = 0;
         bool ifDfdAttack = false;
 
-        // 攻击方攻击0.6f
+        // 攻击方攻击
         combat.actor_atk.StartDoAction("攻击",combat.actor_dfd.gameObject);
         
-        while(timer <= 0.6f)
+        while(timer < 0.3f || !combat.actor_dfd.ifActionEnd)
         {
-            timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
+            timer += Time.deltaTime;
         }
         timer = 0;
 
@@ -46,7 +50,11 @@ public class CombatManager : MonoBehaviour
             if(action == "受伤")
             {
                 combat.actor_dfd.Behit(combat.beDamaged1_dfd);
-                combat.actor_dfd.StartDoAction("受伤", combat.actor_atk.gameObject);
+            }
+            if(action == "格挡")
+            {
+                combat.actor_dfd.Behit(combat.beDamaged1_dfd);
+                combat.actor_dfd.StartDoAction("格挡", combat.actor_atk.gameObject);
             }
             if(action == "闪避")
             {
@@ -61,11 +69,11 @@ public class CombatManager : MonoBehaviour
         }
 
 
-        // 等待0.4s
-        while (timer <= 0.4f)
+        // 等待
+        while (timer < 0.3f || !combat.actor_dfd.ifActionEnd)
         {
-            timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
+            timer += Time.deltaTime;
         }
         timer = 0;
 
@@ -76,7 +84,11 @@ public class CombatManager : MonoBehaviour
             if (action == "受伤")
             {
                 combat.actor_dfd.Behit(combat.beDamaged2_dfd);
-                combat.actor_dfd.StartDoAction("受伤",combat.actor_atk.gameObject);
+            }
+            if (action == "格挡")
+            {
+                combat.actor_dfd.Behit(combat.beDamaged2_dfd);
+                combat.actor_dfd.StartDoAction("格挡", combat.actor_atk.gameObject);
             }
             if (action == "闪避")
             {
@@ -85,31 +97,37 @@ public class CombatManager : MonoBehaviour
             if (action == "攻击")
             {
                 combat.actor_dfd.Behit(combat.beDamaged2_dfd);
-                combat.actor_dfd.StartDoAction("受伤", combat.actor_atk.gameObject);
                 ifDfdAttack = true;
             }
         }
 
-        // 等待0.4s
-        while (timer <= 0.4f)
+        // 等待
+        while (!combat.actor_atk.ifActionEnd && !combat.actor_dfd.ifActionEnd)
         {
-            timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
-        timer = 0;
 
+        // 防御方反击
         if(ifDfdAttack)
         {
             combat.actor_dfd.StartDoAction("攻击", combat.actor_atk.gameObject);
-            combat.actor_atk.StartDoAction("受伤", combat.actor_dfd.gameObject);
+
+            // 攻击时间
+            while (!combat.actor_atk.ifActionEnd || !combat.actor_dfd.ifActionEnd)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
             combat.actor_atk.Behit(combat.beDamaged1_atk + combat.beDamaged2_atk);
         }
 
-        while (timer <= 0.4f && ifDfdAttack)
+        while (!combat.actor_atk.ifActionEnd || !combat.actor_dfd.ifActionEnd)
         {
-            timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
+
+
+        isCombating = false;
 
         GameManager.instance.gameInputMode = GameManager.InputMode.play;
     }

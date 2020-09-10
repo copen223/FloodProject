@@ -382,6 +382,8 @@ public class UIManager : MonoBehaviour
             if (actorUI.GetComponent<ActorUIController>().actor == actor)
             {
                 actorUI.GetComponent<ActorUIController>().UpdateHpUI(isActive);
+                //if(!actor.activeInHierarchy || actor.GetComponent<ActorMono>().healPoint <=0)
+                //    actorUI.GetComponent<ActorUIController>().UpdateHpUI(false);
                 return;
             }
         }

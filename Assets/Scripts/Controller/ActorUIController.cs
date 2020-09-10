@@ -124,11 +124,13 @@ public class ActorUIController : MonoBehaviour
     {
         if (!isActive)
         {
-            dirSign.SetActive(false);
+            healPoint.SetActive(false);
+            Debug.Log(actor.name + "death");
             return;
         }
 
         healPoint.SetActive(true);
+        Debug.Log(actor.name);
 
         ActorMono actor_mono = actor.GetComponent<ActorMono>();
         

@@ -9,6 +9,7 @@ public class CameraController : MonoBehaviour
     public float speed_value;
     public float speed_battle;
     public Vector2 offset;
+    public Vector2 offset_battle;
     public float shake_max;
     // Update is called once per frame
     void Update()
@@ -39,6 +40,16 @@ public class CameraController : MonoBehaviour
 
     private void MoveByInput()
     {
+        if (BattleManager.instance.actor_curTurn == null)
+            return;
+
+        if(BattleManager.instance.actor_curTurn.group == ActorMono.Group.monster)
+        {
+            Vector3 pos = BattleManager.instance.actor_curTurn.transform.position;
+            transform.position = new Vector3(pos.x, pos.y, transform.position.z);
+            return;
+        }
+
         Vector2 dir = new Vector2(0, 0);
 
         if (Input.GetKey(KeyCode.A))

@@ -183,7 +183,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
                     if (targetMono != null)
                     {
                         DoCasted(hit.collider.gameObject.GetComponent<ActorMono>());
-                        GameManager.instance.gameInputMode = GameManager.InputMode.play;
+                        //GameManager.instance.gameInputMode = GameManager.InputMode.play;
                     }
                 }
             }

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598991de34b361044ac0c7212bf9d138, type: 3}
+  m_Name: "\u9632\u5FA1\u6D4B\u8BD5"
+  m_EditorClassIdentifier: 
+  sign_up: "\u683C\u63212"
+  sign_down: "\u95EA\u907F2"
+  effect: 
+  cast_type: "\u65E0"
+  cast_extent_x: 0
+  cast_extent_y: 0
+  memory_cost: 0
+  damage_multiply: 0
+  cardName: "\u9632\u5FA1\u6D4B\u8BD5"

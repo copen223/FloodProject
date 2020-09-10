@@ -228,4 +228,10 @@ public class PlayerController : MonoBehaviour
         controlMode = ControlMode.Battle;
         component_move.Stop();
     }
+
+    public void OnBattleEnd()
+    {
+        controlMode = ControlMode.Explore;
+        component_move.Stop();
+    }
 }

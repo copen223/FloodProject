@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
     public void OnExplore()
     {
         gameState = State.Explore;
-        BattleManager.instance.OnBattleEnd();
+        gameInputMode = InputMode.play;
     }
 
 }

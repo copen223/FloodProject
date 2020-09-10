@@ -60,6 +60,7 @@ public class BattleManager : MonoBehaviour
         UIManager.instance.ActiveUI("BattleMode",true);
         UIManager.instance.ActiveUI("BattleStartButton",false);
         UIManager.instance.ActiveUI("UIArea", true);
+        UIManager.instance.ActiveUI("TurnEnd", true);
 
         UIManager.instance.SetActorsUI(actorsInBattle_list);
 
@@ -86,11 +87,11 @@ public class BattleManager : MonoBehaviour
         public int Compare(GameObject x, GameObject y)
         {
             if (x.GetComponent<ActorMono>().advantage > y.GetComponent<ActorMono>().advantage)
-                return 1;
+                return -1;
             else if (x.GetComponent<ActorMono>().advantage == y.GetComponent<ActorMono>().advantage)
                 return 0;
             else
-                return -1;
+                return 1;
         }
     }
 
@@ -114,7 +115,7 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-
+            
             actor_curTurn.DiscardFocusedCard();
             actor_curTurn.FocusUp();
             actor_curTurn.DrawStartCard();
@@ -129,8 +130,9 @@ public class BattleManager : MonoBehaviour
             UIManager.instance.ActiveUI("UIArea", isPlayerTurn);
             UIManager.instance.ActiveUI("Hand", isPlayerTurn);
             UIManager.instance.ActiveUI("DeckNum", isPlayerTurn);
-            UIManager.instance.ActiveUI("DisCardNum", isPlayerTurn);
+            UIManager.instance.ActiveUI("DiscardNum", isPlayerTurn);
             UIManager.instance.ActiveUI("FocusPoint", isPlayerTurn);
+            UIManager.instance.ActiveUI("TurnEnd", isPlayerTurn);
 
     }
 
@@ -201,18 +203,36 @@ public class BattleManager : MonoBehaviour
 
     public void OnTurnEnd()
     {
+        if (BattleState == State.None)
+            return;
+        if(IfBattleEnd)
+        {
+            OnBattleEnd();
+            return;
+        }
+
         BattleState = State.TurnEnd;
 
         if(actor_curTurn.group == ActorMono.Group.player)
             actor_curTurn.DiscardEndCard();
 
+        // 选择下一个激活的对象
+        do
+        {
+            turnIndex += 1;
 
-        turnIndex += 1;
+            if (turnIndex >= actorsQueue_list.Count)
+            {
+                // 一轮结束，下一轮重新根据优先级决定队列
+                ActorSortByAdvantage sort = new ActorSortByAdvantage();
+                actorsQueue_list = new List<GameObject>(actorsInBattle_list);
+                actorsQueue_list.Sort(sort);
+                turnIndex = 0;
+            }
 
-        if (turnIndex >= actorsQueue_list.Count)
-            turnIndex = 0;
-
-        actor_curTurn = actorsQueue_list[turnIndex].GetComponent<ActorMono>();
+            actor_curTurn = actorsQueue_list[turnIndex].GetComponent<ActorMono>();
+        }
+        while (actor_curTurn.battleState == ActorMono.BattleState.death);
 
         OnTurnStart();
     }
@@ -224,12 +244,32 @@ public class BattleManager : MonoBehaviour
 
     public void OnBattleEnd()
     {
-        //UIManager.instance.ActiveUI("BattleMode", false);
-        //UIManager.instance.ActiveUI("BattleStartButton", true);
-        //UIManager.instance.ActiveUI("Hand", false);
-        //UIManager.instance.ActiveUI("ActionPoint", false);
-        //UIManager.instance.ActiveUI("MovePoint", false); UIManager.instance.ActiveUI("DeckNum", false);
-        //UIManager.instance.ActiveUI("DisCardNum", false);
+        BattleState = State.BattleEnd;
+
+        UIManager.instance.ActiveUI("BattleMode", false);
+        UIManager.instance.ActiveUI("BattleStartButton", true);
+        UIManager.instance.ActiveUI("Hand", false);
+        UIManager.instance.ActiveUI("UIArea", false);
+        UIManager.instance.ActiveUI("ActionPoint", false);
+        UIManager.instance.ActiveUI("MovePoint", false);
+        UIManager.instance.ActiveUI("FocusPoint", false);
+        UIManager.instance.ActiveUI("DeckNum", false);
+        UIManager.instance.ActiveUI("DiscardNum", false);
+        UIManager.instance.ActiveUI("TurnEnd", false);
+
+
+
+        foreach (var actor in actorsInBattle_list)
+        {
+            if (actor.GetComponent<ActorMono>().group == ActorMono.Group.monster)
+                continue;
+
+            actor.SendMessage("OnBattleEnd");
+        }
+
+        GameManager.instance.OnExplore();
+
+        BattleState = State.None;
     }
 
     private void BattleEnd()
@@ -237,5 +277,51 @@ public class BattleManager : MonoBehaviour
 
     }
 
+
+
+    // 加入对战队列
+    public void JoinInBattle(GameObject actor)
+    {
+        actorsInBattle_list.Add(actor);
+        // 新加入的单位在目前轮次处于最后
+        actorsQueue_list.Add(actor);
+        UIManager.instance.SetActorsUI(actorsInBattle_list);
+    }
+
+    // 离开对战队列
+    public void RemoveFromBattle(GameObject actor)
+    {
+        actorsInBattle_list.Remove(actor);
+        UIManager.instance.SetActorsUI(actorsInBattle_list);
+
+        if (IfBattleEnd)
+            OnBattleEnd();
+    }
+
+    private bool IfBattleEnd
+    {
+        get
+        {
+            int monsterCount = 0;
+            int playerCount = 0;
+            foreach(var actor in actorsInBattle_list)
+            {
+                if(actor.GetComponent<ActorMono>().group == ActorMono.Group.monster)
+                {
+                    monsterCount += 1;
+                }
+                if(actor.GetComponent<ActorMono>().group == ActorMono.Group.player)
+                {
+                    playerCount += 1;
+                }
+
+            }
+
+            if (monsterCount <= 0 || playerCount <= 0)
+                return true;
+            else
+                return false;
+        }
+    }
 
 }

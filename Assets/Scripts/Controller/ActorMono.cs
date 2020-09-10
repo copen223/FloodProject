@@ -15,6 +15,16 @@ public class ActorMono : MonoBehaviour
 
     public Group group;
 
+    public enum BattleState
+    {
+        none,
+        death
+    }
+
+    public BattleState battleState = BattleState.none;
+
+    public bool ifActionEnd = true;
+
 
     // 属性与资源
     private int focusPoint;
@@ -135,6 +145,7 @@ public class ActorMono : MonoBehaviour
 
     public void OnBattle()
     {
+        ifActionEnd = true;
         UIManager.instance.UpdateActorHpUI(gameObject, true);
     }
 
@@ -143,7 +154,23 @@ public class ActorMono : MonoBehaviour
     {
         healPoint -= (damage);
         UIManager.instance.UpdateActorFloatUI(gameObject, damage + "", 0);
+
+        if (healPoint <= 0)
+        {
+            healPoint = 0;
+            battleState = BattleState.death;
+            UIManager.instance.UpdateActorHpUI(gameObject, false);
+            StartDoAction("死亡", gameObject);
+            return;
+        }
+        else
+        {
+            StartDoAction("受伤", gameObject);
+        }
+
         UIManager.instance.UpdateActorHpUI(gameObject, true);
+
+        
     }
 
     public void ResumeActionPoint()
@@ -358,6 +385,7 @@ public class ActorMono : MonoBehaviour
     // 演出
     public void StartDoAction(string action,GameObject target)
     {
+        ifActionEnd = false;
         StopAllCoroutines();
         StartCoroutine(DoAction(action, target));
     }
@@ -366,10 +394,11 @@ public class ActorMono : MonoBehaviour
     private IEnumerator DoAction(string action,GameObject target)
     {
         float timer = 0f;
-       
+
         if(action == "受伤")
         {
             //UIManager.instance.UpdateActorFloatUI(gameObject, "被击中", 1);
+
 
             while(timer<0.7f)
             {
@@ -415,6 +444,26 @@ public class ActorMono : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
         }
+        if(action == "死亡")
+        {
+            UIManager.instance.UpdateActorFloatUI(gameObject, "死亡", 1);
+            // 死亡时间
+            while(timer<0.7f)
+            {
+                timer += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+            // 死亡结果
+            BattleManager.instance.RemoveFromBattle(gameObject);
+            if (IsThisTurn)
+            {
+                ifActionEnd = true;
+                BattleManager.instance.OnTurnEnd();
+            }
+            gameObject.SetActive(false);
+        }
+
+        ifActionEnd = true;
 
     }
 

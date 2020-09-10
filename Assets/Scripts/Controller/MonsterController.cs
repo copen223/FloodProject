@@ -116,7 +116,7 @@ public class MonsterController : MonoBehaviour
                 break;
             }
 
-            // 移动完毕 施放卡牌
+            // 移动完毕 
 
             Timer timer = new Timer();
 
@@ -136,10 +136,20 @@ public class MonsterController : MonoBehaviour
             //}
             //animator.SetInteger("ToAttack", -1);
 
-            CombatManager.instance.StartCombat(actor, card, target.GetComponent<ActorMono>());
+            // 专注卡牌
 
-            yield return new WaitForSeconds(0.5f);
+
+
+            // 释放卡牌
+            CombatManager.instance.StartCombat(actor, card, target.GetComponent<ActorMono>());
         }
+
+        while(CombatManager.instance.isCombating)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return new WaitForSeconds(0.6f);
 
         BattleManager.instance.OnTurnEnd();
 
