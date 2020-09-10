@@ -108,6 +108,7 @@ public class PlayerController : MonoBehaviour
             Jump();
             return;
         }
+        //Debug.Log(component_move.IsColliding_ladder_down +""+ Time.time );
         if(!component_move.IsColliding_down && !component_move.IsColliding_ladder_down)
         {
             state = State.Jump;

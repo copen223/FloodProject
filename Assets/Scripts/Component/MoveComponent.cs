@@ -49,7 +49,6 @@ public class MoveComponent : MonoBehaviour
 
     private void CheckIfCollide()
     {
-  
 
         ray_offset_left = disWithDir.x < 0 ? (-disWithDir.x) : 0;
         ray_offset_right = disWithDir.x > 0 ? disWithDir.x : 0;
@@ -180,9 +179,13 @@ public class MoveComponent : MonoBehaviour
                 {
                     IsColliding_down = true;
 
-                    float newOffset = -hit_down.point.y + transform.position.y - ray_down_dis;
+                    float newOffset = -hit_down.point.y + transform.position.y - ray_down_dis ;
                     if (newOffset < 0)
                         newOffset = 0;
+                    Debug.Log(newOffset + " " + move_offset_down);
+
+                    move_offset_down = newOffset;
+
                     if (move_offset_down > newOffset)
                     {
                         move_offset_down = newOffset;
@@ -192,6 +195,14 @@ public class MoveComponent : MonoBehaviour
                 if(hit_down.collider.tag == "Ladder")
                 {
                     IsColliding_ladder_down = true;
+                }
+            }
+
+            if(IsColliding_ladder_down ==false)
+            {
+                foreach (var hit_down in hit_list)
+                {
+                    //Debug.Log(hit_down.collider + ""+Time.time) ;
                 }
             }
         }

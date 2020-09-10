@@ -26,6 +26,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     public Image signIcon_up;
     public Image signIcon_down;
     public Text cardName_text;
+    public Text cardDescription_text;
 
     public Color focus_frame_color;
     public Color focus_one_frame_color;
@@ -123,7 +124,11 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     public void OnCasted()
     {
         if (holder.ActionPoint <= 0)
+        {
+            state = State.selected;
+            OnSelected();
             return;
+        }
 
         UIManager.instance.ActiveUI("TargetSelect", true);
         // 1-3 2-5 3-7
@@ -231,6 +236,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         {
             // 改变卡牌数据的同时更新卡牌view
             card = value;
+            holder = value.holder;
             UpdateCardView();
 
         }
@@ -266,6 +272,12 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         UpdateSignView(card.sign_up.subType,true);
         UpdateSignView(card.sign_down.subType, false);
 
+        // 描述文本
+        string des = "";
+        des += GetDescriptionOfSign(card.sign_up);
+        des += GetDescriptionOfSign(card.sign_down);
+        cardDescription_text.text = des;
+
         if(card.focusCount != 0)
         {
             foucsCount.text = "" + card.focusCount;
@@ -295,6 +307,35 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         }
 
     }
+    private string GetDescriptionOfSign(CardSign sign)
+    {
+        string description = "";
+        if (sign.type == CardSign.Type.atk)
+        {
+            description += "造成" + card.damage_multiply * holder.atk + "点伤害;" + " ";
+        }
+        if (sign.type == CardSign.Type.dfd)
+        {
+            if (sign.type == CardSign.Type.dfd)
+            {
+                if (sign.subType == CardSign.SubType.dfd_block)
+                {
+                    description += "格挡" + holder.dfd + "点伤害;" + " ";
+                }
+                if (sign.subType == CardSign.SubType.dfd_dodge)
+                {
+                    description += "闪避;" + " ";
+                }
+                if (sign.subType == CardSign.SubType.dfd_parry)
+                {
+                    description += "招架;" + " ";
+                }
+            }
+        }
+        return description;
+    }
+
+
     private void UpdateSignView(CardSign.SubType sub,bool isAtUp)
     {
         Image image = null;
@@ -340,7 +381,6 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     public void SetCard(Card card)
     {
         CardModel = card;
-        holder = CardModel.holder;
     }
     /// <summary>
     /// 发动卡片
@@ -367,8 +407,8 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         // 点击->clicked
         if (state == State.selected && eventData.button == PointerEventData.InputButton.Left)
         {
-            state = State.clicked;
-            OnClicked();
+            state = State.casted;
+            OnCasted();
             return;
         }
 
@@ -391,6 +431,8 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (isWatting)
+            return;
+        if (GameManager.instance.gameInputMode == GameManager.InputMode.animation)
             return;
         // 放大卡牌
         if (state == State.none)

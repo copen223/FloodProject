@@ -125,12 +125,12 @@ public class ActorUIController : MonoBehaviour
         if (!isActive)
         {
             healPoint.SetActive(false);
-            Debug.Log(actor.name + "death");
+            //Debug.Log(actor.name + "death");
             return;
         }
 
         healPoint.SetActive(true);
-        Debug.Log(actor.name);
+        //Debug.Log(actor.name);
 
         ActorMono actor_mono = actor.GetComponent<ActorMono>();
         
@@ -153,4 +153,35 @@ public class ActorUIController : MonoBehaviour
             action_text.SetActive(true);
         }
     }
+    public void UpdateFloatText(string text, int pos, bool isActive)
+    {
+        if (pos == 0)
+        {
+            healPointReduce_text.GetComponent<Text>().text = text;
+            healPointReduce_text.GetComponent<Text>().color = new Color(1, 0, 0, 1);
+            healPointReduce_text.SetActive(isActive);
+        }
+        if (pos == 1)
+        {
+            action_text.GetComponent<Text>().text = text;
+            action_text.GetComponent<Text>().color = new Color(0, 0, 0, 1);
+            action_text.SetActive(isActive);
+        }
+    }
+    public void UpdateFloatText(string text, int pos,Color color)
+    {
+        if (pos == 0)
+        {
+            healPointReduce_text.GetComponent<Text>().text = text;
+            healPointReduce_text.GetComponent<Text>().color = color;
+            healPointReduce_text.SetActive(true);
+        }
+        if (pos == 1)
+        {
+            action_text.GetComponent<Text>().text = text;
+            action_text.GetComponent<Text>().color = color;
+            action_text.SetActive(true);
+        }
+    }
+
 }

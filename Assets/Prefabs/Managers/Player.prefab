@@ -141,19 +141,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   group: 0
-  movePoint: 10
-  healPoint: 10
-  atk: 5
+  battleState: 0
+  ifActionEnd: 1
+  movePoint: 20
+  healPoint: 15
+  healPoint_max: 15
+  atk: 2
   dfd: 1
   amor_dfd: 0
   mbt: 1
   advantage: 2
-  focusPoint_max: 3
-  actionPoint_resume: 4
-  actionPoint_max: 4
+  focusPoint_max: 2
+  actionPoint_resume: 2
+  actionPoint_max: 2
   movePoint_resume: 20
   movePoint_max: 20
-  cardNum_hand_start: 5
+  healPoint_resumeVarTurn: 2
+  cardNum_hand_start: 4
   info: {fileID: 0}
   deckInfo: {fileID: 11400000, guid: f2665a83316913d48982820bfb4cdb8e, type: 2}
   move_speed: 4

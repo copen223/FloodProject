@@ -358,6 +358,12 @@ public class UIManager : MonoBehaviour
         for(int i =0;i<actorObjs_list.Count;i++)
         {
             actors_list[i].GetComponent<ActorUIController>().actor = actorObjs_list[i];
+            actors_list[i].GetComponent<ActorUIController>().UpdateHpUI(true);
+        }
+        for(int i= actorObjs_list.Count;i<actors_list.Count;i++)
+        {
+            actors_list[i].GetComponent<ActorUIController>().actor = null;
+            actors_list[i].GetComponent<ActorUIController>().UpdateHpUI(false);
         }
     }
 
@@ -397,6 +403,30 @@ public class UIManager : MonoBehaviour
             if (actorUI.GetComponent<ActorUIController>().actor == actor)   
             {
                 actorUI.GetComponent<ActorUIController>().UpdateFloatText(text,pos);
+                return;
+            }
+        }
+    }
+    public void UpdateActorFloatUI(GameObject actor, string text, int pos,Color color)
+    {
+        for (int i = 0; i < actors_list.Count; i++)
+        {
+            GameObject actorUI = actors_list[i];
+            if (actorUI.GetComponent<ActorUIController>().actor == actor)
+            {
+                actorUI.GetComponent<ActorUIController>().UpdateFloatText(text, pos, color);
+                return;
+            }
+        }
+    }
+    public void UpdateActorFloatUI(GameObject actor, string text, int pos,bool isActive)
+    {
+        for (int i = 0; i < actors_list.Count; i++)
+        {
+            GameObject actorUI = actors_list[i];
+            if (actorUI.GetComponent<ActorUIController>().actor == actor)
+            {
+                actorUI.GetComponent<ActorUIController>().UpdateFloatText(text, pos);
                 return;
             }
         }

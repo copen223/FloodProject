@@ -26,6 +26,7 @@ public class CombatManager : MonoBehaviour
     public IEnumerator ActionShow(Combat combat)
     {
         isCombating = true;
+        bool isDead = false;
 
         GameManager.instance.gameInputMode = GameManager.InputMode.animation;
 
@@ -35,7 +36,7 @@ public class CombatManager : MonoBehaviour
         // 攻击方攻击
         combat.actor_atk.StartDoAction("攻击",combat.actor_dfd.gameObject);
         
-        while(timer < 0.3f || !combat.actor_dfd.ifActionEnd)
+        while(timer < 0.3f)
         {
             yield return new WaitForEndOfFrame();
             timer += Time.deltaTime;
@@ -66,11 +67,16 @@ public class CombatManager : MonoBehaviour
                 combat.actor_dfd.StartDoAction("受伤", combat.actor_atk.gameObject);
                 ifDfdAttack = true;
             }
+
+            if(combat.actor_dfd.battleState == ActorMono.BattleState.death)
+            {
+                isDead = true;
+            }
         }
 
 
         // 等待
-        while (timer < 0.3f || !combat.actor_dfd.ifActionEnd)
+        while (timer < 0.3f && !isDead)
         {
             yield return new WaitForEndOfFrame();
             timer += Time.deltaTime;
@@ -78,7 +84,7 @@ public class CombatManager : MonoBehaviour
         timer = 0;
 
         // 防御方做出反应2
-        if (dfd_actions_list.Count >= 2)
+        if (dfd_actions_list.Count >= 2 && !isDead)
         {
             string action = dfd_actions_list[1];
             if (action == "受伤")
@@ -102,19 +108,20 @@ public class CombatManager : MonoBehaviour
         }
 
         // 等待
-        while (!combat.actor_atk.ifActionEnd && !combat.actor_dfd.ifActionEnd)
+        while (!combat.actor_atk.ifActionEnd || !combat.actor_dfd.ifActionEnd)
         {
             yield return new WaitForEndOfFrame();
         }
 
         // 防御方反击
-        if(ifDfdAttack)
+        if(ifDfdAttack && !isDead)
         {
             combat.actor_dfd.StartDoAction("攻击", combat.actor_atk.gameObject);
 
             // 攻击时间
-            while (!combat.actor_atk.ifActionEnd || !combat.actor_dfd.ifActionEnd)
+            while (timer<0.3f)
             {
+                timer += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
 

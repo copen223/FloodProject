@@ -31,6 +31,7 @@ public class ActorMono : MonoBehaviour
     private int actionPoint;
     public float movePoint;
     public float healPoint;
+    public float healPoint_max;
 
     public int ActionPoint
     {
@@ -73,6 +74,7 @@ public class ActorMono : MonoBehaviour
     public int actionPoint_max;
     public int movePoint_resume;
     public int movePoint_max;
+    public float healPoint_resumeVarTurn;
     //public int cardNum_draw;
     //public int cardNum_discard;
     public int cardNum_hand_start;
@@ -169,8 +171,29 @@ public class ActorMono : MonoBehaviour
         }
 
         UIManager.instance.UpdateActorHpUI(gameObject, true);
+    }
 
+    public void ResumeHitPoint(float value)
+    {
+        healPoint += value;
+        if (healPoint > healPoint_max)
+            healPoint = healPoint_max;
         
+        UIManager.instance.UpdateActorFloatUI(gameObject,value + "",0,Color.green);
+        if (healPoint <= 0)
+        {
+            healPoint = 0;
+            battleState = BattleState.death;
+            UIManager.instance.UpdateActorHpUI(gameObject, false);
+            StartDoAction("死亡", gameObject);
+            return;
+        }
+        else
+        {
+            // 恢复行为
+        }
+
+        UIManager.instance.UpdateActorHpUI(gameObject, true);
     }
 
     public void ResumeActionPoint()
@@ -306,7 +329,12 @@ public class ActorMono : MonoBehaviour
     {
         Card card = FocusedCard;
         if (card.memory_cost == -1)
+        {
+            // 专注的是空白卡牌 也就是没有进行专注
+            // 恢复 休息恢复值
+            ResumeHitPoint(healPoint_resumeVarTurn);
             return;
+        }
         FinishFocusCard(card);
         DiscardCard(card);
     }
@@ -454,6 +482,8 @@ public class ActorMono : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
             // 死亡结果
+            UIManager.instance.UpdateActorFloatUI(gameObject, "", 0, false);
+            UIManager.instance.UpdateActorFloatUI(gameObject, "", 1, false);
             BattleManager.instance.RemoveFromBattle(gameObject);
             if (IsThisTurn)
             {
@@ -485,12 +515,16 @@ public class ActorMono : MonoBehaviour
 
     private void OnMouseEnter()
     {
+        if (GameManager.instance.gameState == GameManager.State.Explore)
+            return; 
+
         switch (GameManager.instance.gameInputMode)
         {
             case GameManager.InputMode.animation:
                 UIManager.instance.UpdateActorDirSignUI(gameObject, false);
                 break;
             case GameManager.InputMode.selectarget:
+                UIManager.instance.UpdateActorDirSignUI(gameObject, true);
                 break;
             case GameManager.InputMode.play:
                 UIManager.instance.UpdateActorDirSignUI(gameObject, true);
@@ -503,6 +537,8 @@ public class ActorMono : MonoBehaviour
 
     private void OnMouseExit()
     {
+        if (GameManager.instance.gameState == GameManager.State.Explore)
+            return;
         UIManager.instance.UpdateActorDirSignUI(gameObject, false);
         GetComponent<SpriteRenderer>().color = Color.white;
     }

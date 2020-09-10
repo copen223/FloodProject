@@ -52,11 +52,22 @@ public class MouseController : MonoBehaviour
         lastCell = curCell;
         curCell = CellPos;
 
+        if(GameManager.instance.gameInputMode == GameManager.InputMode.animation)
+        {
+            SetState(MouseState.cantMove);
+        }
+        else
+        {
+            SetState(MouseState.none);
+        }
 
     }
 
     public void SetState(MouseState _state)
     {
+        if (state == _state)
+            return;
+
         state = _state;
 
         InActiveAllChild();

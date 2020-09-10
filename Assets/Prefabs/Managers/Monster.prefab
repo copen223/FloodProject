@@ -100,18 +100,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   group: 1
+  battleState: 0
+  ifActionEnd: 1
   movePoint: 10
   healPoint: 10
+  healPoint_max: 10
   atk: 2
-  dfd: 0
+  dfd: 1
   amor_dfd: 0
   mbt: 1
   advantage: 1
-  focusPoint_max: 0
+  focusPoint_max: 1
   actionPoint_resume: 0
   actionPoint_max: 0
   movePoint_resume: 10
   movePoint_max: 30
+  healPoint_resumeVarTurn: 1
   cardNum_hand_start: 0
   info: {fileID: 0}
   deckInfo: {fileID: 0}
@@ -146,11 +150,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49569b798a8663e43908942690f39a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardInfo_cast_atk_list:
-  - {fileID: 11400000, guid: a6da2857e2226014dbe004b26f16edff, type: 2}
-  cardInfo_cast_defend_list: []
-  cardInfo_focus_atk_list: []
-  cardInfo_focus_defend_list: []
+  castCard_info: {fileID: 11400000, guid: a6da2857e2226014dbe004b26f16edff, type: 2}
+  focusCard_defend_info: {fileID: 11400000, guid: c992d261dc0427344a0fd85e0d75ff9f, type: 2}
+  focusCard_attack_info: {fileID: 11400000, guid: 21a1b8dd06fa4eb418dc9b76beddf257, type: 2}
   target: {fileID: 0}
   action_count_min: 1
   action_count_max: 1

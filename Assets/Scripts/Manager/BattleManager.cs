@@ -111,6 +111,7 @@ public class BattleManager : MonoBehaviour
         if (actor_curTurn.group == ActorMono.Group.monster)
         {
             actor_curTurn.ResumeMovePoint();
+            actor_curTurn.DiscardFocusedCard();
             actor_curTurn.GetComponent<MonsterController>().TurnStart();
         }
         else
@@ -133,6 +134,7 @@ public class BattleManager : MonoBehaviour
             UIManager.instance.ActiveUI("DiscardNum", isPlayerTurn);
             UIManager.instance.ActiveUI("FocusPoint", isPlayerTurn);
             UIManager.instance.ActiveUI("TurnEnd", isPlayerTurn);
+            UIManager.instance.ActiveUI("Resources", isPlayerTurn);
 
     }
 
@@ -256,6 +258,7 @@ public class BattleManager : MonoBehaviour
         UIManager.instance.ActiveUI("DeckNum", false);
         UIManager.instance.ActiveUI("DiscardNum", false);
         UIManager.instance.ActiveUI("TurnEnd", false);
+        UIManager.instance.ActiveUI("Resources", false);
 
 
 

@@ -19,5 +19,5 @@ MonoBehaviour:
   cast_extent_x: 1
   cast_extent_y: 1
   memory_cost: 0
-  damage_multiply: 2
+  damage_multiply: 1.5
   cardName: "\u5077\u88AD"
