@@ -454,6 +454,10 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 717085469}
+    - target: {fileID: 115668292271565762, guid: 44a89c3c6f526b3428b5eb3712e78dae, type: 3}
+      propertyPath: castCard_info
+      value: 
+      objectReference: {fileID: 11400000, guid: a6da2857e2226014dbe004b26f16edff, type: 2}
     - target: {fileID: 115668292271565763, guid: 44a89c3c6f526b3428b5eb3712e78dae, type: 3}
       propertyPath: movePoint_max
       value: 15
@@ -604,7 +608,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5374586018646380312, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
       propertyPath: actorsInBattle_list.Array.size
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5374586018646380312, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
       propertyPath: actorsInBattle_list.Array.data[0]
@@ -626,6 +630,14 @@ PrefabInstance:
       propertyPath: actorsInBattle_list.Array.data[4]
       value: 
       objectReference: {fileID: 182329431}
+    - target: {fileID: 5374586020362187704, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
+      propertyPath: cardInfos_list.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5374586020362187704, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
+      propertyPath: cardInfos_list.Array.data[7]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8ab236801cc52db4e8f963b8526eead4, type: 2}
     - target: {fileID: 5549952979830237374, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
       propertyPath: m_Text
       value: "\u4E13\u6CE8\uFF1A0/2"

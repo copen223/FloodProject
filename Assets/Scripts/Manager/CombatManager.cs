@@ -191,7 +191,7 @@ public class CombatManager : MonoBehaviour
             CombatAction atk_combatAction = atk_combatActions_list[i];
 
             #region 防御方标记反应 应用和演出
-            string action = dfd_combatAction.actions_list[0];
+            string action = dfd_combatAction.actions_list[dfd_combatAction.actions_list.Count - 1];
 
             float damage = i == 0 ? combat.beDamaged1_dfd : combat.beDamaged2_dfd;
 
@@ -238,6 +238,11 @@ public class CombatManager : MonoBehaviour
 
             if(dfd_combatAction.IfContain("击退"))
             {
+                if (!combat.actor_dfd.ifActionEnd)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+
                 Vector2Int move = i == 0 ? combat.move1_dfd : combat.move2_dfd;
                 combat.actor_dfd.StartForceMoveByDirWithDis(move);
 

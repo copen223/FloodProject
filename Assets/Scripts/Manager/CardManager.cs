@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Struct;
 using System.ComponentModel;
+using UnityEditor;
 
 public class CardManager : MonoBehaviour
 {
@@ -44,6 +45,7 @@ public class CardManager : MonoBehaviour
         card.effects_list = new List<CardEffect>(); // 具体效果待定
         card.sign_up = GetCardSignByText(card, info.sign_up, true);
         card.sign_down = GetCardSignByText(card, info.sign_down, false);
+        card.effects_list = GetCardEffectsByText(info.effect);
         card.cast_extent_x = info.cast_extent_x;
         card.cast_extent_y = info.cast_extent_y;
         card.cardName = info.cardName;
@@ -193,6 +195,85 @@ public class CardManager : MonoBehaviour
         }
 
     }
+
+    private List<CardEffect> GetCardEffectsByText(string txt)
+    {
+        List<CardEffect> effects_list = new List<CardEffect>();
+        string[] effects_array = txt.Split('；');
+        foreach(var effect in effects_array)
+        {
+            CardEffect cardEffect = GetCardEffectByText(effect);
+            if(cardEffect != null)
+            {
+                effects_list.Add(cardEffect);
+            }
+        }
+
+        return effects_list;
+    }
+    private CardEffect GetCardEffectByText(string txt)
+    {
+        if (txt == "")
+            return null;
+
+        string[] text_array = txt.Split('：');
+
+        string effectTrigger = text_array[0];
+        string effectName = text_array[1]; 
+
+        char[] words = effectName.ToCharArray();
+
+        // 名称
+        List<char> name = new List<char>();
+        // 数值
+        List<char> value = new List<char>();
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            if (words[i] > 47 && words[i] < 58)
+            {
+                value.Add(words[i]);
+            }
+            else
+            {
+                name.Add(words[i]);
+            }
+        }
+
+        char[] _name = name.ToArray();
+        string mname = new string(_name);
+
+        char[] _value = value.ToArray();
+
+        CardEffect effect;
+        int inten;
+
+        if (_value.Length > 0)
+        {
+            inten = 0;
+
+            for (int i = 0; i < _value.Length; i++)
+            {
+                int pow = (int)Mathf.Pow(10, _value.Length - i - 1);
+                inten += (_value[i] - 48) * pow;
+            }
+        }
+        else
+        {
+            inten = 0;
+        }
+
+        switch (mname)
+        {
+            case "击退":effect = new CardEffect_Repulse(inten);effect.trigger = effectTrigger;break;
+            default:effect = null;break;
+        }
+
+        return effect;
+
+    }
+
+
 
     // 从数据库获取卡牌
 

@@ -82,6 +82,8 @@ namespace Assets.Scripts.Struct
             move2_atk = move_atk;
             move2_dfd = move_dfd;
 
+
+
             // 完成一次combat的计算
             // combat 记录了战斗的双方，触发的反应，以及两次对抗分别产生的数值影响
         }

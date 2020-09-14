@@ -236,6 +236,7 @@ public class ActorMono : MonoBehaviour
         Vector3Int targetCell_pos = nowCell_pos + new Vector3Int(dirWithDis.x, dirWithDis.y, 0);
         List<Vector3> pos_list = PathFinderManager.instance.SearchForcePathTo(nowCell_pos,targetCell_pos);
 
+        StopAllCoroutines();
         StartCoroutine(MoveByList(pos_list, false));
     }
 
