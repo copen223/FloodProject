@@ -343,6 +343,7 @@ public class ActorMono : MonoBehaviour
     {
         ActionPoint -= 1;
 
+        UIManager.instance.UpdateActorFloatUI(gameObject, card.cardName, 2);
         CombatManager.instance.StartCombat(this, card, target);
 
         DiscardCard(card);
@@ -354,6 +355,7 @@ public class ActorMono : MonoBehaviour
         if (focusPoint >= focusPoint_max)
             return;
 
+        UIManager.instance.UpdateActorFloatUI(gameObject, card.cardName, 2);
         handPile.TranslateCardTo(card, focusPile);
         FocusPoint++;
 
@@ -410,7 +412,7 @@ public class ActorMono : MonoBehaviour
         }
     }
 
-    // 演出
+    // 开始演出
     public void StartDoAction(string action,GameObject target)
     {
         ifActionEnd = false;
@@ -418,7 +420,7 @@ public class ActorMono : MonoBehaviour
         StartCoroutine(DoAction(action, target));
     }
 
-
+    // 演出协程
     private IEnumerator DoAction(string action,GameObject target)
     {
         float timer = 0f;
@@ -434,9 +436,9 @@ public class ActorMono : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
         }
-        if (action == "攻击")
+        if (action == "攻击" || action == "反击")
         {
-            UIManager.instance.UpdateActorFloatUI(gameObject, "攻击", 1);
+            UIManager.instance.UpdateActorFloatUI(gameObject, action, 1);
 
             Animator animator = GetComponent<Animator>();
             float toRight = target.transform.position.x > transform.position.x ? 1 : -1;
@@ -492,7 +494,10 @@ public class ActorMono : MonoBehaviour
             }
             gameObject.SetActive(false);
         }
-
+        if(action == "专注")
+        {
+            UIManager.instance.UpdateActorFloatUI(gameObject, "专注", 1);
+        }
         ifActionEnd = true;
 
     }

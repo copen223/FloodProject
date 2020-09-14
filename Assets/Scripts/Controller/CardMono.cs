@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Assets.Scripts.Struct;
-using TMPro.EditorUtilities;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System;
 
 public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,IPointerExitHandler
@@ -145,7 +143,10 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
     {
         UIManager.instance.TranslateUIPos("TargetSelect", HolderPos);
 
-        Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition.z = 10;
+        Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(mousePosition);
+
 
         // 检测距离
         bool CanSelect = true;
@@ -153,15 +154,22 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         float dis_x = Mathf.Abs(mouse_pos.x - holder.WorldPos.x);
         float dis_y = Mathf.Abs(mouse_pos.y - holder.WorldPos.y);
 
-        if (dis_x > card.cast_extent_x || dis_y > card.cast_extent_y)
+        if (dis_x > card.cast_extent_x + 0.5f || dis_y > card.cast_extent_y)
         {
             CanSelect = false;
         }
 
-        RaycastHit2D hit = Physics2D.Raycast(mouse_pos, Vector2.zero);
-        if (hit.collider != null)
+        //RaycastHit2D hit = Physics2D.Raycast(mouse_pos, Vector2.zero);
+        //Debug.Log(mouse_pos);
+
+        Collider2D collider = Physics2D.OverlapPoint(mouse_pos);
+
+        Debug.Log(collider);
+
+        //Debug.DrawRay(mouse_pos, Vector3.zero,Color.red);
+        if (collider != null)
         {
-            ActorMono targetMono = hit.collider.gameObject.GetComponent<ActorMono>();
+            ActorMono targetMono = collider.gameObject.GetComponent<ActorMono>();
 
             if (targetMono != null)
             {
@@ -182,12 +190,12 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 // 进行cast
-                if (hit.collider != null)
+                if (collider != null)
                 {
-                    ActorMono targetMono = hit.collider.gameObject.GetComponent<ActorMono>();
+                    ActorMono targetMono = collider.gameObject.GetComponent<ActorMono>();
                     if (targetMono != null)
                     {
-                        DoCasted(hit.collider.gameObject.GetComponent<ActorMono>());
+                        DoCasted(collider.gameObject.GetComponent<ActorMono>());
                         //GameManager.instance.gameInputMode = GameManager.InputMode.play;
                     }
                 }
@@ -205,6 +213,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         state = State.focused;
         //holder.ActionPoint -= 1;
         holder.FocusCard(CardModel);
+        holder.StartDoAction("专注", holder.gameObject);
 
         ActiveActionUI(false);
         transform.localScale = scale_ori;

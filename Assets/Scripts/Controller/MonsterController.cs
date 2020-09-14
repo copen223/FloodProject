@@ -100,7 +100,7 @@ public class MonsterController : MonoBehaviour
     {
 
         // 确定行动
-        if (actor.healPoint <= actor.healPoint_max * 0.3f)
+        if (actor.healPoint <= actor.healPoint_max * 0.4f)
             actionMode = ActionMode.dfend;
         else
         {
@@ -132,7 +132,7 @@ public class MonsterController : MonoBehaviour
 
                 // 是否需要移动
                 Vector2 dirWithDis = target.GetComponent<ActorMono>().WorldPos - actor.WorldPos;
-                if (Mathf.Abs(dirWithDis.x) > card.cast_extent_x || Mathf.Abs(dirWithDis.y) > card.cast_extent_y)
+                if (Mathf.Abs(dirWithDis.x) > card.cast_extent_x +0.5f || Mathf.Abs(dirWithDis.y) > card.cast_extent_y)
                 {
                     // 确定路径
                     var path_list = PathFinderManager.instance.SearchPathLinkTo(actor.WorldPos, target.GetComponent<ActorMono>().WorldPos);
@@ -197,7 +197,12 @@ public class MonsterController : MonoBehaviour
             // 专注卡牌
             // 确定是否要专注
 
-            bool ifFocus = (Random.Range(0, 100)) < (20f + (100f * (actor.healPoint / actor.healPoint_max))) ? true : false;
+            while(CombatManager.instance.isCombating)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            bool ifFocus = (Random.Range(0, 100)) < (10f + (100f * (actor.healPoint / actor.healPoint_max))) ? true : false;
 
             if(ifFocus)
             {
@@ -210,6 +215,8 @@ public class MonsterController : MonoBehaviour
                 {
                     actor.FocusCard(focusCard_defend);
                 }
+                actor.StartDoAction("专注", actor.gameObject);
+                yield return new WaitForSeconds(0.5f);
             }
         }
 

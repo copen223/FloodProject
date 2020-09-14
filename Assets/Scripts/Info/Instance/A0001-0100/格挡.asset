@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 598991de34b361044ac0c7212bf9d138, type: 3}
   m_Name: "\u683C\u6321"
   m_EditorClassIdentifier: 
-  sign_up: "\u683C\u63212"
+  sign_up: "\u683C\u63213"
   sign_down: "\u7A7A\u767D"
   effect: 
   cast_type: "\u65E0"

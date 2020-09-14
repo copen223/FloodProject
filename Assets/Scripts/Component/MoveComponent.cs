@@ -182,7 +182,7 @@ public class MoveComponent : MonoBehaviour
                     float newOffset = -hit_down.point.y + transform.position.y - ray_down_dis ;
                     if (newOffset < 0)
                         newOffset = 0;
-                    Debug.Log(newOffset + " " + move_offset_down);
+                    //Debug.Log(newOffset + " " + move_offset_down);
 
                     move_offset_down = newOffset;
 

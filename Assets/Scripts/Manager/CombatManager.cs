@@ -116,7 +116,7 @@ public class CombatManager : MonoBehaviour
         // 防御方反击
         if(ifDfdAttack && !isDead)
         {
-            combat.actor_dfd.StartDoAction("攻击", combat.actor_atk.gameObject);
+            combat.actor_dfd.StartDoAction("反击", combat.actor_atk.gameObject);
 
             // 攻击时间
             while (timer<0.3f)

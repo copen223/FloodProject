@@ -21,6 +21,7 @@ public class ActorUIController : MonoBehaviour
 
     public GameObject action_text;
     public GameObject healPointReduce_text;
+    public GameObject action_card_text;
 
     // Start is called before the first frame update
 
@@ -64,6 +65,18 @@ public class ActorUIController : MonoBehaviour
                 if (color.a <= 0)
                 {
                     action_text.SetActive(false);
+                }
+            }
+
+            worldPos += grid.cellSize.y * new Vector3(0, 0.6f, 0);
+            if (action_card_text.activeInHierarchy)
+            {
+                action_card_text.transform.position = Camera.main.WorldToScreenPoint(worldPos);
+                Color color = action_card_text.GetComponent<Text>().color;
+                action_card_text.GetComponent<Text>().color = new Color(color.r, color.g, color.b, color.a -= Time.deltaTime);
+                if (color.a <= 0)
+                {
+                    action_card_text.SetActive(false);
                 }
             }
         }
@@ -152,6 +165,12 @@ public class ActorUIController : MonoBehaviour
             action_text.GetComponent<Text>().color = new Color(0, 0, 0, 1);
             action_text.SetActive(true);
         }
+        if(pos == 2)
+        {
+            action_card_text.GetComponent<Text>().text = text;
+            action_card_text.GetComponent<Text>().color = new Color(0, 0, 0, 1);
+            action_card_text.SetActive(true);
+        }
     }
     public void UpdateFloatText(string text, int pos, bool isActive)
     {
@@ -167,6 +186,12 @@ public class ActorUIController : MonoBehaviour
             action_text.GetComponent<Text>().color = new Color(0, 0, 0, 1);
             action_text.SetActive(isActive);
         }
+        if (pos == 2)
+        {
+            action_card_text.GetComponent<Text>().text = text;
+            action_card_text.GetComponent<Text>().color = new Color(0, 0, 0, 1);
+            action_card_text.SetActive(isActive);
+        }
     }
     public void UpdateFloatText(string text, int pos,Color color)
     {
@@ -181,6 +206,12 @@ public class ActorUIController : MonoBehaviour
             action_text.GetComponent<Text>().text = text;
             action_text.GetComponent<Text>().color = color;
             action_text.SetActive(true);
+        }
+        if (pos == 2)
+        {
+            action_card_text.GetComponent<Text>().text = text;
+            action_card_text.GetComponent<Text>().color = color;
+            action_card_text.SetActive(true);
         }
     }
 

@@ -204,6 +204,18 @@ PrefabInstance:
       propertyPath: healPoint_resumeVarTurn
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2148283209048812115, guid: a2f1d0cca26d13e4c8b52a999d2711ed, type: 3}
+      propertyPath: movePoint_resume
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2148283209048812115, guid: a2f1d0cca26d13e4c8b52a999d2711ed, type: 3}
+      propertyPath: cardNum_hand_start
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2148283209048812115, guid: a2f1d0cca26d13e4c8b52a999d2711ed, type: 3}
+      propertyPath: atk
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2148283209048812116, guid: a2f1d0cca26d13e4c8b52a999d2711ed, type: 3}
       propertyPath: m_Offset.y
       value: -0.47558653
@@ -211,6 +223,10 @@ PrefabInstance:
     - target: {fileID: 2148283209048812116, guid: a2f1d0cca26d13e4c8b52a999d2711ed, type: 3}
       propertyPath: m_Size.y
       value: 0.95117307
+      objectReference: {fileID: 0}
+    - target: {fileID: 2148283209048812117, guid: a2f1d0cca26d13e4c8b52a999d2711ed, type: 3}
+      propertyPath: walk_speed
+      value: 2.8
       objectReference: {fileID: 0}
     - target: {fileID: 2148283209048812119, guid: a2f1d0cca26d13e4c8b52a999d2711ed, type: 3}
       propertyPath: m_LocalPosition.x
@@ -610,6 +626,14 @@ PrefabInstance:
       propertyPath: actorsInBattle_list.Array.data[4]
       value: 
       objectReference: {fileID: 182329431}
+    - target: {fileID: 5549952979830237374, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
+      propertyPath: m_Text
+      value: "\u4E13\u6CE8\uFF1A0/2"
+      objectReference: {fileID: 0}
+    - target: {fileID: 6931046427044254646, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8591657276943266254, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
