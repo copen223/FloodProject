@@ -215,7 +215,7 @@ public class MonsterController : MonoBehaviour
                 {
                     actor.FocusCard(focusCard_defend);
                 }
-                actor.StartDoAction("专注", actor.gameObject);
+                actor.StartDoAction("专注", null,false);
                 yield return new WaitForSeconds(0.5f);
             }
         }

@@ -8,7 +8,7 @@ namespace Assets.Scripts.Struct
 {
     public abstract class SignEffect:Effect
     {
-        public string trigger;
+
     }
 
 

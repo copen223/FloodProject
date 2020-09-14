@@ -23,5 +23,18 @@ namespace Assets.Scripts.Struct
 
 
         public float damage_multiply;
+
+        public bool IfCanCast(ActorMono actor)
+        {
+            float dis_x = UnityEngine.Mathf.Abs(actor.WorldPos.x - holder.WorldPos.x);
+            float dis_y = UnityEngine.Mathf.Abs(actor.WorldPos.y - holder.WorldPos.y);
+
+            if (dis_x > cast_extent_x + 0.5f || dis_y > cast_extent_y)
+            {
+                return false;
+            }
+            else
+                return true;
+        }
     }
 }

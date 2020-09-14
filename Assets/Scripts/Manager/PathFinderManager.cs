@@ -111,6 +111,114 @@ public class PathFinderManager : MonoBehaviour
 
     }
 
+    public List<Vector3> SearchForcePathTo(Vector3Int nowCell_pos, Vector3Int targetCell_pos)
+    {
+        List<Vector3> pos_list = new List<Vector3>();
+        List<Node> node_list = new List<Node>();
+
+        nodeMap.UpdateNodeType();
+
+        // 获取现在位置的节点
+        Node now = nodeMap.GetNodeByGridPos(nowCell_pos.x, nowCell_pos.y);
+        // 获取目标节点
+        Node target = nodeMap.GetNodeByGridPos(targetCell_pos.x, targetCell_pos.y);
+
+        while (true)
+        {
+            // 如果不能站立 停止
+            if(!now.CanWalk)
+            {
+                break;
+            }
+
+            node_list.Add(now);
+
+            // 如果到达目标点 停止
+            if (now.x == target.x && now.y == target.y)
+            {
+                break;
+            }
+
+            int x = 0;int y = 0;
+            if (target.x > now.x) x = 1;
+            if (target.x < now.x) x = -1;
+            if (target.y > now.y) y = 1;
+            if (target.y < now.y) y = -1;
+
+            now = nodeMap.GetNodeByGridPos(now.x + x, now.y + y);
+        }
+
+        // 到达目标点
+        if(now.CanWalk)
+        {
+            return GetWorldPosByCellPos(node_list);
+        }
+
+        // 因不能站立而中断
+        // 遇到障碍物
+        if(now.type == Node.Type.obstacle)
+        {
+            return GetWorldPosByCellPos(node_list);    
+        }
+        // 在空中
+        if(now.type == Node.Type.none || now.type ==  Node.Type.ladder)
+        {
+            // 继续向右搜索
+            while (true)
+            {
+                if(now.type == Node.Type.obstacle)
+                {
+                    break;
+                }
+                
+                node_list.Add(now);
+
+                if (now.x == target.x)
+                {
+                    break;
+                }
+
+                int x = 0;
+                if (target.x > now.x) x = 1;
+                if (target.x < now.x) x = -1;
+
+                now = nodeMap.GetNodeByGridPos(now.x + x, now.y);
+            }
+
+            // 下坠
+            now = node_list[node_list.Count - 1];
+
+            while(true)
+            {
+                now = nodeMap.GetNodeByGridPos(now.x, now.y - 1);
+
+                if (now.CanWalk)
+                {
+                    node_list.Add(now);
+                    break;
+                }
+                else
+                {
+                    node_list.Add(now);
+                }
+            }
+
+        }
+
+        return GetWorldPosByCellPos(node_list);
+    }
+
+    private List<Vector3> GetWorldPosByCellPos(List<Node> node_list)
+    {
+        List<Vector3> pos_list = new List<Vector3>();
+        foreach(var node in node_list)
+        {
+            Vector3 pos = grid.GetCellCenterWorld(new Vector3Int(node.x,node.y,0));
+            pos_list.Add(pos);
+        }
+        return pos_list;
+    }
+
     public void CreatSign(Vector2Int pos)
     {
         Vector2 worldPos = grid.GetCellCenterWorld(new Vector3Int(pos.x, pos.y, 0));

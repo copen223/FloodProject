@@ -162,12 +162,12 @@ public class ActorMono : MonoBehaviour
             healPoint = 0;
             battleState = BattleState.death;
             UIManager.instance.UpdateActorHpUI(gameObject, false);
-            StartDoAction("死亡", gameObject);
+            StartDoAction("死亡", null,false);
             return;
         }
         else
         {
-            StartDoAction("受伤", gameObject);
+            StartDoAction("受伤", null,false);
         }
 
         UIManager.instance.UpdateActorHpUI(gameObject, true);
@@ -185,7 +185,7 @@ public class ActorMono : MonoBehaviour
             healPoint = 0;
             battleState = BattleState.death;
             UIManager.instance.UpdateActorHpUI(gameObject, false);
-            StartDoAction("死亡", gameObject);
+            StartDoAction("死亡", null,false);
             return;
         }
         else
@@ -224,18 +224,29 @@ public class ActorMono : MonoBehaviour
         UIManager.instance.HideUI("UIArea", true);
         UIManager.instance.HideUI("Hand", true);
 
-        StartCoroutine(MoveByList(pos_list));
+        StartCoroutine(MoveByList(pos_list,true));
     }
 
     public bool stopMoveByList;
-    IEnumerator MoveByList(List<Vector3> pos_list)
+
+    public void StartForceMoveByDirWithDis(Vector2Int dirWithDis)
+    {
+        Grid grid = PathFinderManager.instance.grid;
+        Vector3Int nowCell_pos = grid.WorldToCell(WorldPos);
+        Vector3Int targetCell_pos = nowCell_pos + new Vector3Int(dirWithDis.x, dirWithDis.y, 0);
+        List<Vector3> pos_list = PathFinderManager.instance.SearchForcePathTo(nowCell_pos,targetCell_pos);
+
+        StartCoroutine(MoveByList(pos_list, false));
+    }
+
+    IEnumerator MoveByList(List<Vector3> pos_list,bool ifCost)
     {
         IsMoving = true;
         stopMoveByList = false;
 
         for (int i = 0; i < pos_list.Count; i++)
         {
-            if(i!=0)
+            if(i!=0 && ifCost)
                 movePoint -= BattleManager.instance.moveCost_varCell;
             if(IsThisTurn)
                 UIManager.instance.UpdateUIText("MovePoint", "移动" + movePoint);
@@ -413,15 +424,15 @@ public class ActorMono : MonoBehaviour
     }
 
     // 开始演出
-    public void StartDoAction(string action,GameObject target)
+    public void StartDoAction(string action,Combat combat,bool isAtker)
     {
         ifActionEnd = false;
         StopAllCoroutines();
-        StartCoroutine(DoAction(action, target));
+        StartCoroutine(DoAction(action, combat,isAtker));
     }
 
     // 演出协程
-    private IEnumerator DoAction(string action,GameObject target)
+    private IEnumerator DoAction(string action,Combat combat,bool isAtker)
     {
         float timer = 0f;
 
@@ -441,6 +452,7 @@ public class ActorMono : MonoBehaviour
             UIManager.instance.UpdateActorFloatUI(gameObject, action, 1);
 
             Animator animator = GetComponent<Animator>();
+            GameObject target = isAtker ? combat.actor_dfd.gameObject : combat.actor_atk.gameObject;
             float toRight = target.transform.position.x > transform.position.x ? 1 : -1;
             animator.SetInteger("ToAttack", 1);
             animator.SetFloat("Blend", toRight);
@@ -498,6 +510,11 @@ public class ActorMono : MonoBehaviour
         {
             UIManager.instance.UpdateActorFloatUI(gameObject, "专注", 1);
         }
+        if(action == "击退")
+        {
+            
+        }
+
         ifActionEnd = true;
 
     }

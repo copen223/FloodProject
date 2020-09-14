@@ -164,7 +164,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
 
         Collider2D collider = Physics2D.OverlapPoint(mouse_pos);
 
-        Debug.Log(collider);
+        //Debug.Log(collider);
 
         //Debug.DrawRay(mouse_pos, Vector3.zero,Color.red);
         if (collider != null)
@@ -213,7 +213,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         state = State.focused;
         //holder.ActionPoint -= 1;
         holder.FocusCard(CardModel);
-        holder.StartDoAction("专注", holder.gameObject);
+        holder.StartDoAction("专注", null,false);
 
         ActiveActionUI(false);
         transform.localScale = scale_ori;
