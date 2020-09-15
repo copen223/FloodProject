@@ -51,6 +51,7 @@ public class BattleManager : MonoBehaviour
 
     // 其他数值
     public float moveCost_varCell;
+    public float fallDamage_varCell;
 
     public void OnBattleStart()
     {

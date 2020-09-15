@@ -234,10 +234,21 @@ public class ActorMono : MonoBehaviour
         Grid grid = PathFinderManager.instance.grid;
         Vector3Int nowCell_pos = grid.WorldToCell(WorldPos);
         Vector3Int targetCell_pos = nowCell_pos + new Vector3Int(dirWithDis.x, dirWithDis.y, 0);
-        List<Vector3> pos_list = PathFinderManager.instance.SearchForcePathTo(nowCell_pos,targetCell_pos);
+        int fallNum = 0;
+        List<Vector3> pos_list = PathFinderManager.instance.SearchForcePathTo(nowCell_pos,targetCell_pos,out fallNum);
 
         StopAllCoroutines();
         StartCoroutine(MoveByList(pos_list, false));
+        StartCoroutine(FallDamage(fallNum));
+    }
+    IEnumerator FallDamage(int fallNum)
+    {
+        while(IsMoving)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        if(fallNum >0 )
+            Behit(fallNum * BattleManager.instance.fallDamage_varCell);
     }
 
     IEnumerator MoveByList(List<Vector3> pos_list,bool ifCost)

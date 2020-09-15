@@ -202,6 +202,7 @@ public class MonsterController : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
 
+
             bool ifFocus = (Random.Range(0, 100)) < (10f + (100f * (actor.healPoint / actor.healPoint_max))) ? true : false;
 
             if(ifFocus)

@@ -308,11 +308,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 115668292271565789, guid: 44a89c3c6f526b3428b5eb3712e78dae, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.51
+      value: -11.52
       objectReference: {fileID: 0}
     - target: {fileID: 115668292271565789, guid: 44a89c3c6f526b3428b5eb3712e78dae, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.06
+      value: 2.1
       objectReference: {fileID: 0}
     - target: {fileID: 115668292271565789, guid: 44a89c3c6f526b3428b5eb3712e78dae, type: 3}
       propertyPath: m_LocalPosition.z
@@ -551,11 +551,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 115668292271565789, guid: 44a89c3c6f526b3428b5eb3712e78dae, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.48
+      value: -0.59
       objectReference: {fileID: 0}
     - target: {fileID: 115668292271565789, guid: 44a89c3c6f526b3428b5eb3712e78dae, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.9
+      value: -1.97
       objectReference: {fileID: 0}
     - target: {fileID: 115668292271565789, guid: 44a89c3c6f526b3428b5eb3712e78dae, type: 3}
       propertyPath: m_LocalPosition.z
@@ -608,7 +608,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5374586018646380312, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
       propertyPath: actorsInBattle_list.Array.size
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5374586018646380312, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
       propertyPath: actorsInBattle_list.Array.data[0]
@@ -630,6 +630,10 @@ PrefabInstance:
       propertyPath: actorsInBattle_list.Array.data[4]
       value: 
       objectReference: {fileID: 182329431}
+    - target: {fileID: 5374586018646380312, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
+      propertyPath: fallDamage_varCell
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5374586020362187704, guid: fa09e48926b023d4685b9f53d74150df, type: 3}
       propertyPath: cardInfos_list.Array.size
       value: 8

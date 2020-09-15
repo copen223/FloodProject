@@ -162,6 +162,8 @@ public class CombatManager : MonoBehaviour
         bool isDead = false;
         bool ifAtk = false;
         bool ifDfdAttack = false;
+        bool ifAtkBreak = false;
+        int breakIndex = 0;
 
         List<CombatAction> dfd_combatActions_list = combat.dfd_actions_list;
         List<CombatAction> atk_combatActions_list = combat.atk_actions_list;
@@ -216,14 +218,8 @@ public class CombatManager : MonoBehaviour
 
                 if(atk_combatAction.IfContain("击退"))
                 {
-                    Vector2Int move = i == 0 ? combat.move1_atk : combat.move2_atk;
-                    combat.actor_atk.StartForceMoveByDirWithDis(move);
-                    
-                    if (combat.actor_atk.IsMoving)
-                        yield return new WaitForEndOfFrame();
-
-                    isCombating = false;
-                    StopCoroutine(ActionShow(combat));
+                    ifAtkBreak = true;
+                    breakIndex = i;
                 }
             }
 
@@ -270,6 +266,15 @@ public class CombatManager : MonoBehaviour
 
             combat.actor_atk.Behit(combat.beDamaged1_atk + combat.beDamaged2_atk);
 
+            if(ifAtkBreak)
+            {
+                Vector2Int move = breakIndex == 0 ? combat.move1_atk : combat.move2_atk;
+                combat.actor_atk.StartForceMoveByDirWithDis(move);
+
+                while (combat.actor_atk.IsMoving)
+                    yield return new WaitForEndOfFrame();
+            }
+
             if (!combat.actor_atk.ifActionEnd || !combat.actor_dfd.ifActionEnd)
             {
                 yield return new WaitForEndOfFrame();
@@ -280,6 +285,7 @@ public class CombatManager : MonoBehaviour
         #endregion
 
         isCombating = false;
+
     }
 
 

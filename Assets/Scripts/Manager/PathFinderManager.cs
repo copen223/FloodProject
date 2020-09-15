@@ -111,7 +111,7 @@ public class PathFinderManager : MonoBehaviour
 
     }
 
-    public List<Vector3> SearchForcePathTo(Vector3Int nowCell_pos, Vector3Int targetCell_pos)
+    public List<Vector3> SearchForcePathTo(Vector3Int nowCell_pos, Vector3Int targetCell_pos,out int fallCell_Count)
     {
         List<Vector3> pos_list = new List<Vector3>();
         List<Node> node_list = new List<Node>();
@@ -151,6 +151,7 @@ public class PathFinderManager : MonoBehaviour
         // 到达目标点
         if(now.CanWalk)
         {
+            fallCell_Count = 0;
             return GetWorldPosByCellPos(node_list);
         }
 
@@ -158,9 +159,11 @@ public class PathFinderManager : MonoBehaviour
         // 遇到障碍物
         if(now.type == Node.Type.obstacle)
         {
+            fallCell_Count = 0;
             return GetWorldPosByCellPos(node_list);    
         }
         // 在空中
+        fallCell_Count = 0;
         if(now.type == Node.Type.none || now.type ==  Node.Type.ladder)
         {
             // 继续向右搜索
@@ -190,6 +193,7 @@ public class PathFinderManager : MonoBehaviour
 
             while(true)
             {
+                fallCell_Count += 1;
                 now = nodeMap.GetNodeByGridPos(now.x, now.y - 1);
 
                 if (now.CanWalk)
