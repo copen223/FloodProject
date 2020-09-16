@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 598991de34b361044ac0c7212bf9d138, type: 3}
-  m_Name: "\u5361\u7247 2"
+  m_Name: "\u98DE\u5200"
   m_EditorClassIdentifier: 
-  sign_up: "\u62DB\u67B63"
-  sign_down: "\u949D\u51FB2"
+  sign_up: "\u7A81\u523A2"
+  sign_down: "\u7A7A\u767D"
   effect: 
-  cast_type: 
-  cast_extent_x: 2
-  cast_extent_y: 1
+  cast_type: 2
+  cast_extent_x: 5
+  cast_extent_y: 3
   memory_cost: 0
-  cardName: C
+  damage_multiply: 1
+  cardName: "\u98DE\u5200"

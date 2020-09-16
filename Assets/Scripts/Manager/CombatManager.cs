@@ -258,7 +258,7 @@ public class CombatManager : MonoBehaviour
 
         #region 反击演出
 
-        if (ifDfdAttack && !isDead && combat.card_dfd.IfCanCast(combat.actor_atk))
+        if (ifDfdAttack && !isDead && combat.card_dfd.IfCanCast(combat.actor_dfd,combat.actor_atk))
         {
             combat.actor_dfd.StartDoAction("反击", combat, false);
 

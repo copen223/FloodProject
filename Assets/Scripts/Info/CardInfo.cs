@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Struct;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ public class CardInfo : ScriptableObject
     public string sign_up;
     public string sign_down;
     public string effect;
-    public string cast_type;
+    public Card.CastType cast_type;
     public int cast_extent_x;
     public int cast_extent_y;
     public int memory_cost;

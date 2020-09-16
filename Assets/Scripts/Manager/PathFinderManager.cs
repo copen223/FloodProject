@@ -191,6 +191,11 @@ public class PathFinderManager : MonoBehaviour
             // 下坠
             now = node_list[node_list.Count - 1];
 
+            if(now.CanWalk)
+            {
+                return GetWorldPosByCellPos(node_list); 
+            }
+
             while(true)
             {
                 fallCell_Count += 1;

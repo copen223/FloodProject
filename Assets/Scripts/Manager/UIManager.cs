@@ -14,6 +14,9 @@ public class UIManager : MonoBehaviour
     // 鼠标
     public MouseController mouse;
     public GameObject uiArea;
+    // 射线
+    public LineRenderer line;
+
     // 路径
     public List<GameObject> pathPrefabs_list = new List<GameObject>();
     private List<GameObject> path_zy_list = new List<GameObject>();
@@ -430,5 +433,12 @@ public class UIManager : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public void UpdateLineUI(Vector3 start,Vector3 end,bool isActive)
+    {
+        line.enabled = isActive;
+        line.SetPosition(0, start -Vector3.forward * 5);
+        line.SetPosition(1, end - Vector3.forward * 5);
     }
 }

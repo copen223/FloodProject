@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Assets.Scripts.Struct;
 using System;
+using UnityEngine.XR.WSA.Input;
 
 public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,IPointerExitHandler
 {
@@ -147,6 +148,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         mousePosition.z = 10;
         Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(mousePosition);
 
+        
 
         // 检测距离
         bool CanSelect = true;
@@ -154,32 +156,96 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         float dis_x = Mathf.Abs(mouse_pos.x - holder.WorldPos.x);
         float dis_y = Mathf.Abs(mouse_pos.y - holder.WorldPos.y);
 
-        if (dis_x > card.cast_extent_x + 0.5f || dis_y > card.cast_extent_y)
+        if (dis_x > card.cast_extent_x + 0.5f || dis_y > card.cast_extent_y +0.5f)
         {
             CanSelect = false;
         }
 
-        //RaycastHit2D hit = Physics2D.Raycast(mouse_pos, Vector2.zero);
-        //Debug.Log(mouse_pos);
+        Collider2D collider = new Collider2D();
 
-        Collider2D collider = Physics2D.OverlapPoint(mouse_pos);
-
-        //Debug.Log(collider);
-
-        //Debug.DrawRay(mouse_pos, Vector3.zero,Color.red);
-        if (collider != null)
+        if (CardModel.cast_type ==  Card.CastType.射线单体)
         {
-            ActorMono targetMono = collider.gameObject.GetComponent<ActorMono>();
 
-            if (targetMono != null)
+            if (!CanSelect)
             {
-                targetMono.OnMouseSelect(CanSelect);
+                UIManager.instance.UpdateLineUI(HolderPos, mouse_pos, false);
+                return;
+            }
+            RaycastHit2D[] hits = Physics2D.RaycastAll(holder.WorldPos, (mouse_pos - holder.WorldPos).normalized, Vector3.Distance(holder.WorldPos, mouse_pos));
+            List<GameObject> hitObjects = new List<GameObject>();
+
+            RaycastHit2D hit = new RaycastHit2D();
+            bool isHitTarget = false;
+
+            for (int i = 0; i < hits.Length; i++)
+            {
+                hit = hits[i];
+                if (hit.collider.gameObject == holder.gameObject)    // 射到自己 跳过
+                {
+                    isHitTarget = false;
+                    continue;
+                }
+                if (hit.collider.tag == "Ladder") // 射到梯子 跳过
+                {
+                    isHitTarget = false;
+                    continue;
+                }
+
+                if (hit.collider.tag == "Obstacle")  // 射到墙壁 中断
+                {
+                    isHitTarget = true;
+                    break;
+                }
+
+                if (hit.collider.tag == "Actor")
+                {
+                    isHitTarget = true;
+                    hitObjects.Add(hit.collider.gameObject);
+                }
+            }
+
+            if (!isHitTarget)
+            {
+                UIManager.instance.UpdateLineUI(holder.WorldPos, mouse_pos, true);
+            }
+            else if (hit)
+            {
+                Vector3 target_pos = hit.point;
+                UIManager.instance.UpdateLineUI(holder.WorldPos, target_pos, true);
+            }
+
+            if (hit.collider.tag == "Actor" && isHitTarget)
+            {
+                collider = hit.collider;
+                ActorMono targetMono = hit.collider.gameObject.GetComponent<ActorMono>();
+                if (targetMono != null)
+                {
+                    targetMono.OnMouseSelect(CanSelect);
+                    CanSelect = true;
+                }
+                else
+                    CanSelect = false;
+            }
+        }
+        else if(CardModel.cast_type ==  Card.CastType.指向单体)
+        {
+            collider = Physics2D.OverlapPoint(mouse_pos);
+            Debug.Log("222");
+
+            if (collider != null)
+            {
+                ActorMono targetMono = collider.gameObject.GetComponent<ActorMono>();
+
+                if (targetMono != null)
+                {
+                    targetMono.OnMouseSelect(CanSelect);
+                }
             }
         }
 
-
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
+            UIManager.instance.UpdateLineUI(HolderPos, mouse_pos, false);
             GameManager.instance.gameInputMode = GameManager.InputMode.play;
             state = State.none;
             OnNone();
@@ -187,6 +253,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
 
         if (CanSelect)
         {
+            
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 // 进行cast
@@ -195,6 +262,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
                     ActorMono targetMono = collider.gameObject.GetComponent<ActorMono>();
                     if (targetMono != null)
                     {
+                        UIManager.instance.UpdateLineUI(HolderPos, mouse_pos, false);
                         DoCasted(collider.gameObject.GetComponent<ActorMono>());
                         //GameManager.instance.gameInputMode = GameManager.InputMode.play;
                     }
@@ -416,6 +484,9 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         // 点击->clicked
         if (state == State.selected && eventData.button == PointerEventData.InputButton.Left)
         {
+            if (card.cast_type == Card.CastType.无)
+                return;
+
             state = State.casted;
             OnCasted();
             return;

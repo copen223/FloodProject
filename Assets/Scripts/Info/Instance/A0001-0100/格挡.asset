@@ -15,7 +15,7 @@ MonoBehaviour:
   sign_up: "\u683C\u63213"
   sign_down: "\u7A7A\u767D"
   effect: 
-  cast_type: "\u65E0"
+  cast_type: 0
   cast_extent_x: 0
   cast_extent_y: 0
   memory_cost: 0

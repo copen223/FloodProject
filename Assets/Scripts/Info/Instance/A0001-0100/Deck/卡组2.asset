@@ -9,14 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 598991de34b361044ac0c7212bf9d138, type: 3}
-  m_Name: "\u5361\u7247 1"
+  m_Script: {fileID: 11500000, guid: 4ece54680d0f7994bb00c945ad4bddce, type: 3}
+  m_Name: "\u5361\u7EC42"
   m_EditorClassIdentifier: 
-  sign_up: "\u7A81\u523A1"
-  sign_down: "\u95EA\u907F2"
-  effect: 0
-  cast_type: 0
-  cast_extent_x: 1
-  cast_extent_y: 1
-  memory_cost: 0
-  cardName: A
+  cardWithNum:
+  - "\u5077\u88AD1"
+  - "\u6325\u780D2"
+  - "\u683C\u63212"
+  - "\u91CD\u51FB2"
+  - "\u95EA\u8EB21"
+  - "\u7A81\u523A1"

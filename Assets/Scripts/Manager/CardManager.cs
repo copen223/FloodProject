@@ -41,7 +41,7 @@ public class CardManager : MonoBehaviour
     public Card GetCardByInfo(CardInfo info)
     {
         Card card = new Card();
-        card.cast_type = "范围指向";
+        card.cast_type = info.cast_type;
         card.effects_list = new List<CardEffect>(); // 具体效果待定
         card.sign_up = GetCardSignByText(card, info.sign_up, true);
         card.sign_down = GetCardSignByText(card, info.sign_down, false);
@@ -61,7 +61,7 @@ public class CardManager : MonoBehaviour
     public Card GetBlankCard()
     {
         Card card = new Card();
-        card.cast_type = "无";
+        card.cast_type = Card.CastType.无;
         card.effects_list = new List<CardEffect>();
         card.sign_up = GetCardSignByText(card, "空白", true);
         card.sign_down = GetCardSignByText(card, "空白", false);

@@ -13,7 +13,14 @@ namespace Assets.Scripts.Struct
         public CardSign sign_up;
         public CardSign sign_down;
         public List<CardEffect> effects_list = new List<CardEffect>();
-        public string cast_type;
+        public enum CastType
+        {
+            无,
+            指向单体,
+            射线单体
+        }
+
+        public CastType cast_type;
         public int memory_cost;
         public int cast_extent_x;
         public int cast_extent_y;
@@ -24,10 +31,10 @@ namespace Assets.Scripts.Struct
 
         public float damage_multiply;
 
-        public bool IfCanCast(ActorMono actor)
+        public bool IfCanCast(ActorMono _holde,ActorMono actor)
         {
-            float dis_x = UnityEngine.Mathf.Abs(actor.WorldPos.x - holder.WorldPos.x);
-            float dis_y = UnityEngine.Mathf.Abs(actor.WorldPos.y - holder.WorldPos.y);
+            float dis_x = UnityEngine.Mathf.Abs(actor.WorldPos.x - _holde.WorldPos.x);
+            float dis_y = UnityEngine.Mathf.Abs(actor.WorldPos.y - _holde.WorldPos.y);
 
             if (dis_x > cast_extent_x + 0.5f || dis_y > cast_extent_y)
             {

@@ -15,7 +15,7 @@ MonoBehaviour:
   sign_up: "\u5288\u780D2"
   sign_down: "\u5288\u780D2"
   effect: 
-  cast_type: "\u8303\u56F4\u5355\u4F53"
+  cast_type: 1
   cast_extent_x: 1
   cast_extent_y: 1
   memory_cost: 0
