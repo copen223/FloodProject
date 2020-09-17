@@ -220,8 +220,8 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
                 ActorMono targetMono = hit.collider.gameObject.GetComponent<ActorMono>();
                 if (targetMono != null)
                 {
-                    targetMono.OnMouseSelect(CanSelect);
                     CanSelect = true;
+                    targetMono.OnMouseSelect(CanSelect);
                 }
                 else
                     CanSelect = false;
@@ -230,7 +230,6 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         else if(CardModel.cast_type ==  Card.CastType.指向单体)
         {
             collider = Physics2D.OverlapPoint(mouse_pos);
-            Debug.Log("222");
 
             if (collider != null)
             {
@@ -262,6 +261,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
                     ActorMono targetMono = collider.gameObject.GetComponent<ActorMono>();
                     if (targetMono != null)
                     {
+                        targetMono.OnMouseSelect(false);
                         UIManager.instance.UpdateLineUI(HolderPos, mouse_pos, false);
                         DoCasted(collider.gameObject.GetComponent<ActorMono>());
                         //GameManager.instance.gameInputMode = GameManager.InputMode.play;

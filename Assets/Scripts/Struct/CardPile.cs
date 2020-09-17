@@ -91,9 +91,10 @@ namespace Assets.Scripts.Struct
 
         public void SetHolder(ActorMono actor)
         {
-            foreach(var c in cards_list)
+            for(int i=0;i<cards_list.Count;i++)
             {
-                c.holder = actor;
+                Card card = cards_list[i];
+                card.holder = actor;
             }
         }
 

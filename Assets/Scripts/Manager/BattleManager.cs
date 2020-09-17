@@ -69,10 +69,8 @@ public class BattleManager : MonoBehaviour
         {
             if (actor.GetComponent<ActorMono>().group == ActorMono.Group.monster)
                 continue;
-
             actor.SendMessage("OnBattle");
-            actor.SendMessage("InitDeck");
-            actor.SendMessage("ShuffleDeck");
+            var actorMono = actor.GetComponent<ActorMono>(); actorMono.OnBattle();actorMono.InitDeck();actorMono.ShuffleDeck();
         }
 
         // 确定对战队列

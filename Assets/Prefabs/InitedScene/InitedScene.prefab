@@ -1337,7 +1337,7 @@ MonoBehaviour:
   scale_big: {x: 2, y: 2}
   offset: {x: 0, y: 120}
   state: 0
-  cardInfo: {fileID: 11400000, guid: c5f7c9094b07bd349b07657137df2e82, type: 2}
+  cardInfo: {fileID: 0}
   holder: {fileID: 0}
 --- !u!1 &1832300760916919391
 GameObject:
@@ -1412,7 +1412,7 @@ MonoBehaviour:
   scale_big: {x: 2, y: 2}
   offset: {x: 0, y: 120}
   state: 0
-  cardInfo: {fileID: 11400000, guid: 13bf7d3770e845a47b981c33b1ce7e0f, type: 2}
+  cardInfo: {fileID: 0}
   holder: {fileID: 0}
 --- !u!1 &1832300761207939646
 GameObject:
@@ -1487,7 +1487,7 @@ MonoBehaviour:
   scale_big: {x: 2, y: 2}
   offset: {x: 0, y: 120}
   state: 0
-  cardInfo: {fileID: 11400000, guid: 13bf7d3770e845a47b981c33b1ce7e0f, type: 2}
+  cardInfo: {fileID: 0}
   holder: {fileID: 0}
 --- !u!1 &1832300761443852511
 GameObject:
@@ -1562,7 +1562,7 @@ MonoBehaviour:
   scale_big: {x: 2, y: 2}
   offset: {x: 0, y: 120}
   state: 0
-  cardInfo: {fileID: 11400000, guid: 13bf7d3770e845a47b981c33b1ce7e0f, type: 2}
+  cardInfo: {fileID: 0}
   holder: {fileID: 0}
 --- !u!1 &1832300761814554555
 GameObject:
@@ -1637,7 +1637,7 @@ MonoBehaviour:
   scale_big: {x: 2, y: 2}
   offset: {x: 0, y: 120}
   state: 0
-  cardInfo: {fileID: 11400000, guid: 13bf7d3770e845a47b981c33b1ce7e0f, type: 2}
+  cardInfo: {fileID: 0}
   holder: {fileID: 0}
 --- !u!1 &1832300762058402662
 GameObject:
@@ -1712,7 +1712,7 @@ MonoBehaviour:
   scale_big: {x: 2, y: 2}
   offset: {x: 0, y: 120}
   state: 0
-  cardInfo: {fileID: 11400000, guid: 13bf7d3770e845a47b981c33b1ce7e0f, type: 2}
+  cardInfo: {fileID: 0}
   holder: {fileID: 0}
 --- !u!1 &1832300762072092291
 GameObject:
@@ -1787,7 +1787,7 @@ MonoBehaviour:
   scale_big: {x: 2, y: 2}
   offset: {x: 0, y: 120}
   state: 0
-  cardInfo: {fileID: 11400000, guid: 13bf7d3770e845a47b981c33b1ce7e0f, type: 2}
+  cardInfo: {fileID: 0}
   holder: {fileID: 0}
 --- !u!1 &1832300762714731010
 GameObject:
@@ -1862,7 +1862,7 @@ MonoBehaviour:
   scale_big: {x: 2, y: 2}
   offset: {x: 0, y: 120}
   state: 0
-  cardInfo: {fileID: 11400000, guid: 13bf7d3770e845a47b981c33b1ce7e0f, type: 2}
+  cardInfo: {fileID: 0}
   holder: {fileID: 0}
 --- !u!1 &2514266040443322126
 GameObject:
@@ -4784,6 +4784,149 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\u4E13"
+--- !u!1 &4011769013045535757
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2237778826929647231}
+  - component: {fileID: 8332540111547706528}
+  m_Layer: 5
+  m_Name: Line
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2237778826929647231
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4011769013045535757}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5549952980364212353}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!120 &8332540111547706528
+LineRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4011769013045535757}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: c560f1a6f5e72d94fafc8e95db237547, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.0026550293
+        value: 0.2511919
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.70935416
+        value: 0.23810679
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 0.8396226, g: 0.3244161, b: 0.20119254, a: 1}
+      key1: {r: 0.8396226, g: 0.3244161, b: 0.20119254, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 64571
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 1
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 2
+    numCapVertices: 2
+    alignment: 0
+    textureMode: 0
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_UseWorldSpace: 1
+  m_Loop: 0
 --- !u!1 &4193488017246961514
 GameObject:
   m_ObjectHideFlags: 0
@@ -11125,6 +11268,7 @@ MonoBehaviour:
   - {fileID: 0}
   actor_curTurn: {fileID: 0}
   moveCost_varCell: 2
+  fallDamage_varCell: 0
 --- !u!1 &5374586019212517277
 GameObject:
   m_ObjectHideFlags: 0
@@ -11194,6 +11338,7 @@ MonoBehaviour:
   - {fileID: 469876810363863820}
   mouse: {fileID: 5549952980996094757}
   uiArea: {fileID: 5549952979675108506}
+  line: {fileID: 0}
   pathPrefabs_list:
   - {fileID: 724528237376704040, guid: 729f62c94b6e0ec49a998ce570633b40, type: 3}
   - {fileID: 465749144175092974, guid: 89649728fb2fb6d4b8923a084cc829e7, type: 3}
@@ -11895,6 +12040,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5549952980996094758}
+  - {fileID: 2237778826929647231}
   m_Father: {fileID: 5549952980737049642}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

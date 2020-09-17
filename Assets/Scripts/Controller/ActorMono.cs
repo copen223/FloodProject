@@ -438,17 +438,20 @@ public class ActorMono : MonoBehaviour
     // 开始演出
     public void StartDoAction(string action,Combat combat,bool isAtker)
     {
-        ifActionEnd = false;
-        StopAllCoroutines();
+
+        //StopAllCoroutines();
         StartCoroutine(DoAction(action, combat,isAtker));
     }
 
     // 演出协程
     private IEnumerator DoAction(string action,Combat combat,bool isAtker)
     {
-        float timer = 0f;
+        if (!ifActionEnd)
+            yield return new WaitForEndOfFrame();
 
-        if(action == "受伤")
+        float timer = 0f;
+        ifActionEnd = false;
+        if (action == "受伤")
         {
             //UIManager.instance.UpdateActorFloatUI(gameObject, "被击中", 1);
 
@@ -500,13 +503,9 @@ public class ActorMono : MonoBehaviour
         }
         if(action == "死亡")
         {
-            UIManager.instance.UpdateActorFloatUI(gameObject, "死亡", 1);
             // 死亡时间
-            while(timer<0.7f)
-            {
-                timer += Time.deltaTime;
-                yield return new WaitForEndOfFrame();
-            }
+            yield return new WaitForSeconds(0.7f);
+            UIManager.instance.UpdateActorFloatUI(gameObject, "死亡", 1);
             // 死亡结果
             UIManager.instance.UpdateActorFloatUI(gameObject, "", 0, false);
             UIManager.instance.UpdateActorFloatUI(gameObject, "", 1, false);

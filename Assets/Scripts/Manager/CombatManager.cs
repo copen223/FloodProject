@@ -203,8 +203,8 @@ public class CombatManager : MonoBehaviour
             }
             if (action == "格挡")
             {
-                combat.actor_dfd.Behit(damage);
                 combat.actor_dfd.StartDoAction("格挡", combat,false);
+                combat.actor_dfd.Behit(damage);
             }
             if (action == "闪避")
             {
