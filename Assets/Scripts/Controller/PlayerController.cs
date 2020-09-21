@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (controlMode == ControlMode.Battle)
+        if (controlMode == ControlMode.Battle || controlMode == ControlMode.none)
             return;
 
         switch(state)
@@ -43,12 +43,14 @@ public class PlayerController : MonoBehaviour
 
     public enum ControlMode
     {
+        none,
         Explore,
         Battle
     }
 
     public State state;
     public ControlMode controlMode;
+
 
     // 各状态属性
     public float walk_speed;

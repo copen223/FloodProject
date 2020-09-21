@@ -14,6 +14,7 @@ namespace Assets.Scripts.Struct
             trigger = "攻击";
             name = "击退";
             functionTarget = FunctionTarget.target;
+            effectType = EffectType.inCombat;
             repulse_count = _repulseCount;
             effectTags_list.Add(EffectTag.接触);
             priority = 2;

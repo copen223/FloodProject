@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 598991de34b361044ac0c7212bf9d138, type: 3}
   m_Name: "\u91CD\u51FB"
   m_EditorClassIdentifier: 
-  sign_up: "\u949D\u51FB4"
+  sign_up: "\u949D\u51FB2"
   sign_down: "\u7A7A\u767D"
   effect: "\u653B\u51FB\uFF1A\u51FB\u90002\uFF1B"
   cast_type: 1

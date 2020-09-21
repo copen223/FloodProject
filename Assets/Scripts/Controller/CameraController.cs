@@ -71,4 +71,10 @@ public class CameraController : MonoBehaviour
 
         transform.Translate(dir * speed_battle * Time.deltaTime);
     }
+
+    public void MoveToTarget(GameObject target)
+    {
+        Vector3 pos = target.transform.position;
+        transform.position = new Vector3(pos.x, pos.y, transform.position.z);
+    }
 }

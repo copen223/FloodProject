@@ -19,11 +19,11 @@ namespace Assets.Scripts.Struct
         {
             if(isAtker)
             {
-                combat.beDamaged_dfd += combat.actor_atk.atk * Damage_multiply;
+                combat.beDamaged_dfd += (combat.actor_atk.atk + combat.actor_atk.atk_addValue) * Damage_multiply;
             }
             else
             {
-                combat.beDamaged_atk += combat.actor_dfd.atk * Damage_multiply;
+                combat.beDamaged_atk += (combat.actor_dfd.atk + combat.actor_dfd.atk_addValue) * Damage_multiply;
             }
         }
 

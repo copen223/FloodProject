@@ -68,6 +68,10 @@ public class ActorMono : MonoBehaviour
     public float mbt;   // 移动力
     public int advantage;   // 先攻
 
+    // 加值
+    public float atk_addValue = 0;
+
+
     // 调整值
     public int focusPoint_max;
     public int actionPoint_resume;
@@ -83,10 +87,10 @@ public class ActorMono : MonoBehaviour
     public ActorInfo info;
 
     // 卡池
-    public CardPile handPile = new CardPile("handPile");
-    public CardPile discardPile = new CardPile("discardPile");
-    public CardPile focusPile = new CardPile("focusPile");
-    public CardPile deckPile = new CardPile("deckPile");
+    public CardPile handPile = new CardPile(CardPile.PileType.hand);
+    public CardPile discardPile = new CardPile(CardPile.PileType.discard);
+    public CardPile focusPile = new CardPile(CardPile.PileType.focus);
+    public CardPile deckPile = new CardPile(CardPile.PileType.deck);
 
     public DeckInfo deckInfo;
 
@@ -155,7 +159,8 @@ public class ActorMono : MonoBehaviour
     public void Behit(float damage)
     {
         healPoint -= (damage);
-        UIManager.instance.UpdateActorFloatUI(gameObject, damage + "", 0);
+        if(damage!=0)
+            UIManager.instance.UpdateActorFloatUI(gameObject, damage + "", 0);
 
         if (healPoint <= 0)
         {
@@ -199,8 +204,18 @@ public class ActorMono : MonoBehaviour
     public void ResumeActionPoint()
     {
         ActionPoint += actionPoint_resume;
-        if (ActionPoint > actionPoint_max)
-            ActionPoint = actionPoint_max;
+        //if (ActionPoint > actionPoint_max)
+        //    ActionPoint = actionPoint_max;
+    }
+    public void ResumeActionPointToZero()
+    {
+        ActionPoint =0;
+        //if (ActionPoint > actionPoint_max)
+        //    ActionPoint = actionPoint_max;
+    }
+    public void ResumeActionPoint(int num)
+    {
+        ActionPoint += num;
     }
     public void ResumeMovePoint()
     {
@@ -283,6 +298,21 @@ public class ActorMono : MonoBehaviour
     }
 
     // 卡牌相关
+    public void AddNewCardTo(CardPile.PileType _type,Card _card)
+    {
+        switch (_type)
+        {
+            case CardPile.PileType.deck: deckPile.AddCard(_card);break;
+            case CardPile.PileType.focus: focusPile.AddCard(_card); break;
+            case CardPile.PileType.hand: handPile.AddCard(_card);
+                UIManager.instance.UpdateHandUI(handPile.cards_list); break;
+            case CardPile.PileType.discard: discardPile.AddCard(_card); break;
+            default:break;
+        }
+
+    }
+
+
     public void DrawCard(int num)
     {
         for(int  i=0;i<num;i++)
@@ -340,11 +370,36 @@ public class ActorMono : MonoBehaviour
     public void DiscardCard(Card card)
     {
         card.focusCount = 0;
-        handPile.TranslateCardTo(card, discardPile);
-        if(IsThisTurn)
+
+        bool isCosted = false;
+        foreach (CardEffect effect in card.effects_list)
+        {
+            if (effect.name == "消耗")
+            {
+                isCosted = true;
+                break;
+            }
+        }
+
+        if(isCosted)
+            handPile.RemoveCard(card);
+        else
+            handPile.TranslateCardTo(card, discardPile);
+
+        if (IsThisTurn)
         {
             UIManager.instance.UpdateHandUI(handPile.cards_list);
             UIManager.instance.UpdateUIText("DiscardNum", "弃牌:" + discardPile.Count);
+        }
+    }
+
+    public void DiscardCard(int num)
+    {
+        if (num > handPile.Count || num < 0)
+            num = handPile.Count;
+        for(int i =0;i<num;i++)
+        {
+            DiscardCard(handPile.GetFirstCard());
         }
     }
 

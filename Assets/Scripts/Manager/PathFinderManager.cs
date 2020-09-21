@@ -672,6 +672,12 @@ public class Node
                 return true;
             }
 
+            // 能飞跃也能通过 自由的飞翔~~~
+            if (type == Type.none && map.GetNodeByGridPos(x - 1, y).CanWalk && map.GetNodeByGridPos(x + 1, y).CanWalk)
+            {
+                return true;
+            }
+
             //// 能攀爬就能通过
             //if(type == Type.ladder)
             //{

@@ -19,6 +19,15 @@ namespace Assets.Scripts.Struct
 
         public FunctionTarget functionTarget;
 
+        public enum EffectType
+        {
+            inCombat,
+            afterCombat,
+            sign
+        }
+
+        public EffectType effectType;
+
         public abstract string GetDescription();
         
     }

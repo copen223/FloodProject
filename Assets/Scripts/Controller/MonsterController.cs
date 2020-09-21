@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http.Headers;
 using UnityEngine;
 
@@ -92,12 +93,19 @@ public class MonsterController : MonoBehaviour
     {
         // 决定行动次数
         action_count = Random.Range(action_count_min, action_count_max);
-        //UpdateCastCardsList();
+        // 决定目标
+        target = SearchTarget();
         StartCoroutine(TurnGoOn());
     }
 
     IEnumerator TurnGoOn()
     {
+
+        if (target == null)
+        {
+            BattleManager.instance.OnTurnEnd();
+            StopAllCoroutines();
+        }
 
         // 确定行动
         if (actor.healPoint <= actor.healPoint_max * 0.4f)
@@ -110,6 +118,24 @@ public class MonsterController : MonoBehaviour
             if (r == 1)
                 actionMode = ActionMode.attack_defend;
         }
+
+        bool ifFocus = (Random.Range(0, 100)) < (15f + (100f * (actor.healPoint / actor.healPoint_max))) ? true : false;
+
+        if (ifFocus)
+        {
+            if (actionMode == ActionMode.attack)
+            {
+                actor.FocusCard(focusCard_attack);
+            }
+
+            if (actionMode == ActionMode.attack_defend || actionMode == ActionMode.dfend)
+            {
+                actor.FocusCard(focusCard_defend);
+            }
+            actor.StartDoAction("专注", null, false);
+            yield return new WaitForSeconds(0.5f);
+        }
+
 
         for (int i =0;i<action_count;i++)
         {
@@ -154,6 +180,7 @@ public class MonsterController : MonoBehaviour
                 // 移动完毕 
 
                 // 释放卡牌
+                UIManager.instance.UpdateActorFloatUI(gameObject, card.cardName, 2);
                 CombatManager.instance.StartCombat(actor, card, target.GetComponent<ActorMono>());
             }
             if(actionMode == ActionMode.dfend)
@@ -161,8 +188,10 @@ public class MonsterController : MonoBehaviour
                 List<Vector3> path_list = new List<Vector3>();
                 List<Vector3Int> targetPos_list = new List<Vector3Int>();
                 int count = 0;
-                while (path_list == null || path_list.Count == 0 && count < 20)
+                while ((path_list == null || path_list.Count == 0) && count < 10)
                 {
+                    count++;
+
                     int tileCount = (int)(actor.movePoint / BattleManager.instance.moveCost_varCell);
                     int c = Random.Range(0, tileCount + 1);
                     Vector2Int tilePos = new Vector2Int(c, tileCount - c);
@@ -184,7 +213,7 @@ public class MonsterController : MonoBehaviour
 
                     path_list = PathFinderManager.instance.SearchPathTo(actor.WorldPos,targetPos);
 
-                    count += 1;
+                    
                 }
 
                 actor.StartMoveByList(path_list);
@@ -203,22 +232,7 @@ public class MonsterController : MonoBehaviour
             }
 
 
-            bool ifFocus = (Random.Range(0, 100)) < (10f + (100f * (actor.healPoint / actor.healPoint_max))) ? true : false;
-
-            if(ifFocus)
-            {
-                if(actionMode == ActionMode.attack)
-                {
-                    actor.FocusCard(focusCard_attack);
-                }
-
-                if(actionMode == ActionMode.attack_defend || actionMode == ActionMode.dfend)
-                {
-                    actor.FocusCard(focusCard_defend);
-                }
-                actor.StartDoAction("专注", null,false);
-                yield return new WaitForSeconds(0.5f);
-            }
+            
         }
 
         while(CombatManager.instance.isCombating)
@@ -231,5 +245,55 @@ public class MonsterController : MonoBehaviour
         BattleManager.instance.OnTurnEnd();
 
         
+    }
+
+
+    // 搜索对象
+
+    private GameObject SearchTarget()
+    {
+        // 获得player列表
+        List<GameObject> players_list = new List<GameObject>();
+        List<GameObject> actors_list = BattleManager.instance.actorsInBattle_list;
+        
+        for(int i =0;i< actors_list.Count;i++)
+        {
+            if(actors_list[i].GetComponent<ActorMono>().group == ActorMono.Group.player)
+            {
+                players_list.Add(actors_list[i]);
+            }
+        }
+
+
+        // 计算成本
+        float[] costs_array = new float[players_list.Count];
+
+        for(int i =0;i<players_list.Count;i++)
+        {
+            float cost = Vector3.Distance(players_list[i].transform.position, transform.position);
+            costs_array[i] = cost;
+        }
+
+        float min = 9999999f;
+        int index_min = 9999;
+            
+        for(int i=0;i<costs_array.Length;i++)
+        {
+            if (costs_array[i] < min)
+            {
+                min = costs_array[i];
+                index_min = i;
+            }
+
+        }
+
+        if (index_min < 9999)
+        {
+            return players_list[index_min];
+        }
+        else
+            return null;
+        
+
     }
 }

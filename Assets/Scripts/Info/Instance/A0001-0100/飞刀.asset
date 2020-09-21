@@ -17,7 +17,7 @@ MonoBehaviour:
   effect: 
   cast_type: 2
   cast_extent_x: 5
-  cast_extent_y: 3
+  cast_extent_y: 4
   memory_cost: 0
   damage_multiply: 1
   cardName: "\u98DE\u5200"

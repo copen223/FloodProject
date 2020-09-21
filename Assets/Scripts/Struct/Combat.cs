@@ -16,6 +16,10 @@ namespace Assets.Scripts.Struct
         public Card card_atk;
         public Card card_dfd;
 
+        // 战后卡牌效果
+        public List<CardEffect> effects_afterCombat_atk_list = new List<CardEffect>();
+        public List<CardEffect> effects_afterCombat_dfd_list = new List<CardEffect>();
+
         // 标记效果
         public List<SignEffect> effects_sign_list = new List<SignEffect>();
         // 卡牌效果
@@ -125,7 +129,12 @@ namespace Assets.Scripts.Struct
                 if (effect.trigger == "攻击")
                 {
                     effect.isAtker = true;
-                    effects_card_list.Add(effect);
+
+                    if (effect.effectType == CardEffect.EffectType.inCombat)
+                        effects_card_list.Add(effect);
+                    else if (effect.effectType == CardEffect.EffectType.afterCombat)
+                        effects_afterCombat_atk_list.Add(effect);
+
                     if(effect.functionTarget == CardEffect.FunctionTarget.target)
                     {
                         action_dfd.AddAction(effect.name);
@@ -133,8 +142,50 @@ namespace Assets.Scripts.Struct
                 }
             }
 
+            // 进行标记强度修正
+            int atk_addValue = 0;
+            int dfd_addValue = 0;
+
+            if(atk.subType == CardSign.SubType.atk_stab)
+            {
+                // 突刺vs闪避
+                if(dfd.subType == CardSign.SubType.dfd_dodge)
+                {
+                    atk_addValue -= 1;
+                }
+
+                // 突刺vs格挡
+                else if(dfd.subType == CardSign.SubType.dfd_block)
+                {
+                    atk_addValue += 1;
+                }
+            }
+
+            else if(atk.subType == CardSign.SubType.atk_blunt)
+            {
+                // 钝击vs闪避
+                if(dfd.subType == CardSign.SubType.dfd_dodge)
+                {
+                    atk_addValue += 1;
+                }
+
+                // 突刺vs格挡
+                else if (dfd.subType == CardSign.SubType.dfd_block)
+                {
+                    atk_addValue -= 1;
+                }
+
+            }
+
+            //// 任何vs攻击
+            //if(dfd.type == CardSign.Type.atk)
+            //{
+            //    dfd_addValue -= 1;
+            //}
+
+
             // 分成两种情况
-            if (atk.intensity <= dfd.intensity)
+            if (atk.intensity + atk_addValue <= dfd.intensity + dfd_addValue)
             {
                 // 此时为防御情况
 
@@ -155,7 +206,11 @@ namespace Assets.Scripts.Struct
                         if (effect.trigger == "防御")
                         {
                             effect.isAtker = false;
-                            effects_card_list.Add(effect);
+
+                            if (effect.effectType == CardEffect.EffectType.inCombat)
+                                effects_card_list.Add(effect);
+                            else if (effect.effectType == CardEffect.EffectType.afterCombat)
+                                effects_afterCombat_dfd_list.Add(effect);
                         }
                     }
                 }
@@ -169,7 +224,11 @@ namespace Assets.Scripts.Struct
                         if (effect.trigger == "攻击")
                         {
                             effect.isAtker = false;
-                            effects_card_list.Add(effect);
+                            if(effect.effectType == CardEffect.EffectType.inCombat)
+                                effects_card_list.Add(effect);
+                            if (effect.effectType == CardEffect.EffectType.afterCombat)
+                                effects_afterCombat_dfd_list.Add(effect);
+
                             if(effect.functionTarget == CardEffect.FunctionTarget.target)
                             {
                                 action_atk.AddAction(effect.name);

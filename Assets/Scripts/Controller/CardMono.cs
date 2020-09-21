@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Assets.Scripts.Struct;
 using System;
-using UnityEngine.XR.WSA.Input;
 
 public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,IPointerExitHandler
 {
@@ -353,6 +352,10 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         string des = "";
         des += GetDescriptionOfSign(card.sign_up);
         des += GetDescriptionOfSign(card.sign_down);
+        foreach(var ef in card.effects_list)
+        {
+            des += ef.GetDescription();
+        }
         cardDescription_text.text = des;
 
         if(card.focusCount != 0)
@@ -389,7 +392,7 @@ public class CardMono : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler,
         string description = "";
         if (sign.type == CardSign.Type.atk)
         {
-            description += "造成" + card.damage_multiply * holder.atk + "点伤害;" + " ";
+            description += "造成" + card.damage_multiply * ( holder.atk + holder.atk_addValue) + "点伤害;" + " ";
         }
         if (sign.type == CardSign.Type.dfd)
         {

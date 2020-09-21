@@ -8,13 +8,31 @@ namespace Assets.Scripts.Struct
 {
     public class CardPile
     {
+        public enum PileType
+        {
+            none,
+            hand,
+            discard,
+            deck,
+            focus
+        }
+
+        public PileType pileType;
+
+
         public CardPile(string _name)
         {
             pile_name = _name;
         }
+        public CardPile (PileType type)
+        {
+            pile_name = type.ToString();
+            pileType = type;
+        }
         public CardPile()
         {
             pile_name = "none";
+            pileType = PileType.none;
         }
 
 
@@ -60,7 +78,7 @@ namespace Assets.Scripts.Struct
             Card ct = cards_list[0];
             to.AddCard(ct);
 
-            if (to.Name=="focusPile")
+            if (to.Name=="focusPile" || to.pileType == PileType.focus)
             {
                 ct.isFocused = true;
                 return;
@@ -73,7 +91,7 @@ namespace Assets.Scripts.Struct
             Card ct = card;
             to.AddCard(ct);
 
-            if (to.Name == "focusPile")
+            if (to.Name == "focusPile" || to.pileType == PileType.focus)
             {
                 ct.isFocused = true;
                 return;

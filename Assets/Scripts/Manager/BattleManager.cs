@@ -107,6 +107,11 @@ public class BattleManager : MonoBehaviour
     {
         BattleState = State.TurnStart;
 
+        Camera.main.GetComponent<CameraController>().MoveToTarget(actor_curTurn.gameObject);
+
+        // buff清零
+        actor_curTurn.atk_addValue = 0;
+
         if (actor_curTurn.group == ActorMono.Group.monster)
         {
             actor_curTurn.ResumeMovePoint();
@@ -115,7 +120,6 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            
             actor_curTurn.DiscardFocusedCard();
             actor_curTurn.FocusUp();
             actor_curTurn.DrawStartCard();
@@ -156,7 +160,7 @@ public class BattleManager : MonoBehaviour
         }
 
         // 处于UI交互状态 或 动画状态
-        if (UIManager.instance.IsAtUIArea || UIManager.instance.IsHandUsing || GameManager.instance.gameInputMode == GameManager.InputMode.animation)
+        if (CombatManager.instance.isCombating|| UIManager.instance.IsAtUIArea || UIManager.instance.IsHandUsing || GameManager.instance.gameInputMode == GameManager.InputMode.animation)
         {
             UIManager.instance.InActivePath();
             return;
@@ -214,9 +218,11 @@ public class BattleManager : MonoBehaviour
 
         BattleState = State.TurnEnd;
 
-        if(actor_curTurn.group == ActorMono.Group.player)
+        if (actor_curTurn.group == ActorMono.Group.player)
+        {
             actor_curTurn.DiscardEndCard();
-
+            actor_curTurn.ResumeActionPointToZero();
+        }
         // 选择下一个激活的对象
         do
         {

@@ -49,6 +49,7 @@ public class CardManager : MonoBehaviour
         card.cast_extent_x = info.cast_extent_x;
         card.cast_extent_y = info.cast_extent_y;
         card.cardName = info.cardName;
+
         card.damage_multiply = info.damage_multiply;
 
         return card;
@@ -219,12 +220,17 @@ public class CardManager : MonoBehaviour
         string[] text_array = txt.Split('：');
 
         string effectTrigger = text_array[0];
-        string effectName = text_array[1]; 
+        string effectName = text_array[1];
+        string effectText = "";
+        if (text_array.Length > 2)
+            effectText = text_array[2];
 
         char[] words = effectName.ToCharArray();
 
         // 名称
         List<char> name = new List<char>();
+
+        
         // 数值
         List<char> value = new List<char>();
 
@@ -263,12 +269,19 @@ public class CardManager : MonoBehaviour
             inten = 0;
         }
 
+
+
         switch (mname)
         {
             case "击退":effect = new CardEffect_Repulse(inten);effect.trigger = effectTrigger;break;
+            case "抽卡":effect = new CardEffect_DrawCard(effectTrigger, inten);break;
+            case "获卡":effect = new CardEffect_GetCard(effectTrigger, effectText, CardPile.PileType.hand);break;
+            case "消耗":effect = new CardEffect_ToNone();break;
+            case "恢复":effect = new CardEffect_Resume(effectTrigger, inten, effectText);break;
+            case "增强":effect = new CardEffect_PowerUp(effectTrigger, inten);break;
+            case "弃卡":effect = new CardEffect_DiscardCard(effectTrigger, inten);break;
             default:effect = null;break;
         }
-
         return effect;
 
     }

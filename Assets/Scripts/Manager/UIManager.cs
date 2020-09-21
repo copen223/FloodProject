@@ -348,7 +348,7 @@ public class UIManager : MonoBehaviour
     {
         if(actors_list.Count <=0)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 10; i++)
             {
                 GameObject gb = GameObject.Instantiate(actor_prefab, actorParent);
                 actors_list.Add(gb);

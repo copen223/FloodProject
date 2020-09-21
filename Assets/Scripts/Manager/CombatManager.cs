@@ -244,6 +244,7 @@ public class CombatManager : MonoBehaviour
 
                 if (combat.actor_atk.IsMoving)
                     yield return new WaitForEndOfFrame();
+                combat.actor_dfd.Behit(0);
             }
 
             #endregion
@@ -283,6 +284,20 @@ public class CombatManager : MonoBehaviour
         }
 
         #endregion
+
+        // 战后效果生效
+        foreach(var effect in combat.effects_afterCombat_atk_list)
+        {
+            effect.DoEffect(combat);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        foreach(var effect in combat.effects_afterCombat_dfd_list)
+        {
+            effect.DoEffect(combat);
+            yield return new WaitForSeconds(0.5f);
+        }
+
 
         isCombating = false;
 
